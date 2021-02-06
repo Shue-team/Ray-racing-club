@@ -1,2 +1,1 @@
-# Ray-racing-practice
-Educational project
+# Press R for render
