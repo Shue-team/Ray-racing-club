@@ -10,5 +10,5 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-add_executable(Ray-racing-club Main.cpp MainWindow.cpp MainWindow.h MainWindow.ui CommonMath.h)
+add_executable(Ray-racing-club Main.cpp MainWindow.cpp MainWindow.h MainWindow.ui CommonMath.h Hittable.h Ray.h Renderer.cpp Renderer.h)
 target_link_libraries(Ray-racing-club Qt5::Widgets)
