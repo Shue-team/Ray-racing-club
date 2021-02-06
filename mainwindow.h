@@ -15,12 +15,12 @@ class MainWindow : public QWidget {
 Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget* parent = nullptr);
 
     ~MainWindow() override;
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow* mUi;
 };
 
 #endif //RAY_RACING_CLUB_MAINWINDOW_H
