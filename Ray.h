@@ -10,14 +10,14 @@
 class Ray {
 public:
     Ray() {}
-    Ray(const QPoint3D& origin, const QVector3D& direction)
+    Ray(const Point3D& origin, const QVector3D& direction)
         : mOrigin(origin), mDirection(direction) {}
 
-    QPoint3D origin() const { return mOrigin; }
+    Point3D origin() const { return mOrigin; }
     QVector3D direction() const { return mDirection;}
 
 private:
-    QPoint3D mOrigin;
+    Point3D mOrigin;
     QVector3D mDirection;
 };
 

@@ -10,11 +10,11 @@
 struct HitRecord {
     QPoint3D intersection;
     QVector3D normal;
-    double t;
+    float t;
 };
 
 class Hittable {
-    virtual bool hit(const Ray& ray, double tMin, double tMax, HitRecord& record) const = 0;
+    virtual bool hit(const Ray& ray, float tMin, float tMax, HitRecord& record) const = 0;
 };
 
 #endif //RAY_RACING_CLUB_HITTABLE_H

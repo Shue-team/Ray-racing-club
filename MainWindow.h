@@ -21,6 +21,9 @@ public:
 
 private:
     Ui::MainWindow* mUi;
+
+private slots:
+    void onRenderAction() const;
 };
 
 #endif //RAY_RACING_CLUB_MAINWINDOW_H

@@ -7,6 +7,7 @@
 
 #include <QVector3D>
 
-using QPoint3D = QVector3D;
+using Point3D = QVector3D;
+using Color = QVector3D;
 
 #endif //RAY_RACING_CLUB_COMMONMATH_H
