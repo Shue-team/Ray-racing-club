@@ -8,12 +8,13 @@
 #include "Ray.h"
 
 struct HitRecord {
-    QPoint3D intersection;
+    Point3D intersection;
     QVector3D normal;
     double t;
 };
 
 class Hittable {
+public:
     virtual bool hit(const Ray& ray, double tMin, double tMax, HitRecord& record) const = 0;
 };
 

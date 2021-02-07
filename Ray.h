@@ -16,6 +16,8 @@ public:
     Point3D origin() const { return mOrigin; }
     QVector3D direction() const { return mDirection;}
 
+    Point3D at(double t) const { return mOrigin + t * mDirection; }
+
 private:
     Point3D mOrigin;
     QVector3D mDirection;

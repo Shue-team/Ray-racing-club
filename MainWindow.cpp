@@ -25,7 +25,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::onRenderAction() const {
-    Renderer renderer;
+    Renderer renderer(100);
     QSize imgSize = mUi->imageDisplay->size();
     QImage img = renderer.render(imgSize.width(), imgSize.height());
     mUi->imageDisplay->setPixmap(QPixmap::fromImage(img));
