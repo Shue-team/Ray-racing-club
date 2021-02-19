@@ -1,16 +1,20 @@
-cmake_minimum_required(VERSION 3.10)
-project(Ray-racing-club)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+project(Ray-racing-club LANGUAGES CXX CUDA)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(Qt5 COMPONENTS Widgets Concurrent REQUIRED)
+find_package(CUDA REQUIRED)
+set(CUDA_SEPARABLE_COMPILATION ON)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_PREFIX_PATH "C:/QtMSVC15/5.15.2/msvc2015_64")
+find_package(Qt5Widgets REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-add_executable(Ray-racing-club
+cuda_add_executable(Ray-racing-club
         Main.cpp
         MainWindow.cpp
         MainWindow.h
@@ -18,8 +22,15 @@ add_executable(Ray-racing-club
         CommonMath.h
         Hittable/Hittable.h
         Ray.h
-        Renderer.cpp
+        Renderer.cu
         Renderer.h
-        Hittable/Sphere.cpp
-        Hittable/Sphere.h Camera.cpp Camera.h)
-target_link_libraries(Ray-racing-club Qt5::Widgets Qt5::Concurrent)
+        Hittable/Sphere.cu
+        Hittable/Sphere.h
+        Camera.cu
+        Camera.h
+        Vector3D.cu
+        Vector3D.h
+        )
+
+target_link_libraries(Ray-racing-club Qt5::Widgets)
+

@@ -5,6 +5,7 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_MainWindow.h" resolved
 
 #include <QAction>
+
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
@@ -25,8 +26,6 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::onRenderAction() const {
-    Renderer renderer(100);
-    QSize imgSize = mUi->imageDisplay->size();
-    QImage img = renderer.render(imgSize.width(), imgSize.height());
-    mUi->imageDisplay->setPixmap(QPixmap::fromImage(img));
+    //TODO (3): Написать вызов метода-обёртки класса Renderer, преобразовать его результат в QImage
+    // и добавить в ui->imageDisplay.
 }

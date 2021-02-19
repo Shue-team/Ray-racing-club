@@ -10,15 +10,15 @@
 
 class Camera {
 public:
-    Camera(double aspectRatio);
+    Camera(float aspectRatio);
 
-    Ray getRay(double u, double v) const;
+    Ray getRay(float u, float v) const;
 
 private:
     Point3D mOrigin;
     Point3D mBottomLeftCorner;
-    QVector3D mHorizontal;
-    QVector3D mVertical;
+    Vector3D mHorizontal;
+    Vector3D mVertical;
 };
 
 

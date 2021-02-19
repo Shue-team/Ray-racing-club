@@ -5,17 +5,17 @@
 #include <cmath>
 #include "Sphere.h"
 
-bool Sphere::hit(const Ray& ray, double tMin, double tMax, HitRecord& record) const {
+bool Sphere::hit(const Ray& ray, float tMin, float tMax, HitRecord& record) const {
     Point3D oc = ray.origin() - mCenter;
-    double a = ray.direction().lengthSquared();
-    double b = QVector3D::dotProduct(oc, ray.direction());
-    double c = oc.lengthSquared() - mRadius * mRadius;
+    float a = ray.direction().lengthSquared();
+    float b = Vector3D::dotProduct(oc, ray.direction());
+    float c = oc.lengthSquared() - mRadius * mRadius;
 
-    double discriminant = b * b - a * c;
+    float discriminant = b * b - a * c;
     if (discriminant < 0) { return false; }
-    double sqrtd = sqrt(discriminant);
+    float sqrtd = sqrt(discriminant);
 
-    double root = (-b - sqrtd) / a;
+    float root = (-b - sqrtd) / a;
     if (root < tMin || root > tMax) {
         root = (-b + sqrtd) / a;
 
