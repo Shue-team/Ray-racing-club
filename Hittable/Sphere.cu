@@ -26,7 +26,7 @@ bool Sphere::hit(const Ray& ray, float tMin, float tMax, HitRecord& record) cons
 
     record.t = root;
     record.intersection = ray.at(root);
-    record.normal = (record.intersection - mCenter) / mRadius;
-
+    Vector3D outwardNormal = (record.intersection - mCenter) / mRadius;
+    record.setFaceNormal(ray, outwardNormal);
     return true;
 }

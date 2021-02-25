@@ -10,14 +10,14 @@
 
 class Ray {
 public:
-    Ray() {}
-    Ray(const Point3D& origin, const Vector3D& direction)
+    __host__ __device__ Ray() {}
+    __host__ __device__ Ray(const Point3D& origin, const Vector3D& direction)
         : mOrigin(origin), mDirection(direction) {}
 
-    Point3D origin() const { return mOrigin; }
-    Vector3D direction() const { return mDirection;}
+    __host__ __device__ Point3D origin() const { return mOrigin; }
+    __host__ __device__ Vector3D direction() const { return mDirection;}
 
-    Point3D at(float t) const { return mOrigin + t * mDirection; }
+    __host__ __device__ Point3D at(float t) const { return mOrigin + t * mDirection; }
 
 private:
     Point3D mOrigin;

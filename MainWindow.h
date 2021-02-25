@@ -6,6 +6,9 @@
 #define RAY_RACING_CLUB_MAINWINDOW_H
 
 #include <QWidget>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include "Renderer.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,9 +24,11 @@ public:
 
 private:
     Ui::MainWindow* mUi;
-
+    Renderer* mRenderer;
+    bool fChangeMode = false; // temporarily
 private slots:
     void onRenderAction() const;
+    void onModeChangeAction();
 };
 
 #endif //RAY_RACING_CLUB_MAINWINDOW_H

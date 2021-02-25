@@ -10,9 +10,9 @@
 
 class Camera {
 public:
-    Camera(float aspectRatio);
+    __host__ __device__ Camera(float aspectRatio);
 
-    Ray getRay(float u, float v) const;
+    __host__ __device__ Ray getRay(float u, float v) const;
 
 private:
     Point3D mOrigin;

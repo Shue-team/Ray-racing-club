@@ -84,7 +84,7 @@ __host__ __device__ Vector3D Vector3D::crossProduct(const Vector3D& a, const Vec
                     a[0] * b[1] - a[1] * b[0]);
 }
 
-__device__ void Vector3D::atomicAdd(const Vector3D& other) {
+__device__ void Vector3D::atomAdd(const Vector3D& other) {
     atomicAdd(mCoords, other[0]);
     atomicAdd(mCoords + 1, other[1]);
     atomicAdd(mCoords + 2, other[2]);
