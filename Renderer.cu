@@ -4,8 +4,7 @@
 #include <cstdio>
 #include <QDebug>
 #include <cfloat>
-#include <thrust/random/linear_congruential_engine.h>
-#include <thrust/random/uniform_real_distribution.h>
+#include <ctime>
 
 
 
@@ -80,7 +79,7 @@ __global__ void getFinePicture(Image image, int n, const Camera cam, Hittable** 
     pixColor[0] = pixColor[1] = pixColor[2] = 0;
     __syncthreads();
     Hittable* world = *world_ptr;
-    int thrIdx = threadIdx.x + blockIdx.x * blockDim.x;
+    int thrIdx = threadIdx.x /*+ blockIdx.x * blockDim.x*/;
     int picIdx = blockIdx.x;
     int i, j;
     mapToImage(picIdx, i, j, image.height, image.width);
@@ -106,6 +105,11 @@ unsigned char* Renderer::render() {
     }
     cudaError_t error;
     int blocks;
+    cudaEvent_t start, stop;
+    float gpuTime = 0.0f;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+    cudaEventRecord(start, 0);
     if (mode == RenderMode::FAST) {
         blocks = (image.height * image.width + threadsFast - 1) / threadsFast;
         getFastPicture <<<blocks, threadsFast>>> (image, image.width * image.height, cam, d_world);
@@ -115,7 +119,11 @@ unsigned char* Renderer::render() {
         getFinePicture <<<blocks, samplesPerPix>>> (image, image.width * image.height, cam, d_world, randState);
     }
     error = cudaMemcpy(image.pixels, image.d_pixels, image.height * image.width * 3 * sizeof(char), cudaMemcpyDeviceToHost);
+    cudaEventRecord (stop, 0);
+    cudaEventSynchronize (stop);
+    cudaEventElapsedTime (&gpuTime, start, stop);
     qDebug() << "cuda memcpy pixels: " << cudaGetErrorString(error);
+    std::cout << "render time: " << gpuTime << " ms." << std::endl;
     return image.pixels;
 }
 
@@ -129,8 +137,7 @@ __global__ void initWorld(Hittable** world) {
 }
 
 //todo: think how to generate rand numbers and not use 4gb of vram
-__global__ void setupKernel(curandState *state) {
-    const int seed = 16;
+__global__ void setupKernel(curandState *state, int seed) {
     int idx = threadIdx.x+blockDim.x*blockIdx.x;
     curand_init(seed, idx, 0, &state[idx]);
 }
@@ -157,9 +164,10 @@ Renderer::Renderer(const int height, const int width):cam((float)width / height)
         qDebug() << "troubles with world creation on the device";
     }
     mode = RenderMode::FAST;
-    error = cudaMalloc((void**)&randState, height * width * samplesPerPix * sizeof(curandState)); // todo: blya kak mnogo
+    error = cudaMalloc((void**)&randState, /*height * width * */ samplesPerPix * sizeof(curandState)); // todo: blya kak mnogo
     qDebug() << "cuda malloc rand state: " << cudaGetErrorString(error);
-    setupKernel<<<image.height * image.width, samplesPerPix>>>(randState);
+    int seed = clock() % 512;
+    setupKernel<<</*image.height * image.width*/1, samplesPerPix>>>(randState, seed);
     cudaDeviceSynchronize();
 }
 
