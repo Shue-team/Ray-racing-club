@@ -24,11 +24,9 @@ public:
 
 private:
     Ui::MainWindow* mUi;
-    Renderer* mRenderer;
-    bool fChangeMode = false; // temporarily
+
 private slots:
     void onRenderAction() const;
-    void onModeChangeAction();
 };
 
 #endif //RAY_RACING_CLUB_MAINWINDOW_H

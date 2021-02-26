@@ -18,45 +18,27 @@ MainWindow::MainWindow(QWidget* parent) :
         QWidget(parent), mUi(new Ui::MainWindow) {
     mUi->setupUi(this);
 
-    /*mRenderer = new Renderer(mUi->imageDisplay->height(), mUi->imageDisplay->width());
-    if (!mRenderer) {
-        qDebug() << "not enough memory for renderer!";
-    }*/
-
     auto renderAction = new QAction(this);
     renderAction->setShortcut(Qt::Key_R);
     connect(renderAction, &QAction::triggered, this, &MainWindow::onRenderAction);
     addAction(renderAction);
-    auto modeAction = new QAction(this);
-    modeAction->setShortcut(Qt::Key_E);
-    connect(modeAction, &QAction::triggered, this, &MainWindow::onModeChangeAction);
-    addAction(modeAction);
 }
 
 MainWindow::~MainWindow() {
-    //delete mRenderer;
-    cudaError_t cudaStatus = cudaDeviceReset();
-    qDebug() << "device reset status: " << cudaGetErrorString(cudaStatus);
     delete mUi;
 }
 
 void MainWindow::onRenderAction() const {
-    Renderer renderer(mUi->imageDisplay->height(), mUi->imageDisplay->width()); // temporarily
-    Renderer* mRenderer = &renderer;
-    int height = mRenderer->getHeight();
-    int width = mRenderer->getWidth();
-    if (fChangeMode) { // temporarily
-        mRenderer->changeMode();
-    }
-    unsigned char* pixels = mRenderer->render();
-    if (!pixels) {
-        qDebug() << "render returned nullptr";
-        return;
-    }
-    QImage image(pixels, width, height, 3 * width, mRenderer->getImageFormat());
-    mUi->imageDisplay->setPixmap(QPixmap::fromImage(image));
-}
+    int width = mUi->imageDisplay->width();
+    int height = mUi->imageDisplay->height();
 
-void MainWindow::onModeChangeAction() {
-    fChangeMode = !fChangeMode;
+    Renderer renderer(width, height, 100);
+
+    float aspectRatio = width / height;
+    auto* camera = new Camera(aspectRatio);
+
+    uchar8* pixelData = renderer.render(camera);
+
+    QImage image(pixelData, width, height,QImage::Format_RGB888);
+    mUi->imageDisplay->setPixmap(QPixmap::fromImage(image));
 }

@@ -9,11 +9,12 @@ Camera::Camera(float aspectRatio) {
     float viewportWidth = viewportHeight * aspectRatio;
     float focalLength = 1.0f;
 
-    mOrigin = Point3D(0, 0, 0);
-    mHorizontal = Vector3D(viewportWidth, 0, 0);
-    mVertical = Vector3D(0, viewportHeight, 0);
-    Vector3D vUp(0, 0, focalLength);
-    mBottomLeftCorner = mOrigin - mHorizontal / 2 - mVertical / 2 - vUp;
+    mOrigin = Point3D(0.0f, 0.0f, 0.0f);
+    mHorizontal = Vector3D(viewportWidth, 0.0f, 0.0f);
+    mVertical = Vector3D(0.0f, viewportHeight, 0.0f);
+
+    Vector3D vUp(0.0f, 0.0f, focalLength);
+    mBottomLeftCorner = mOrigin - mHorizontal / 2.0f - mVertical / 2.0f - vUp;
 }
 
 Ray Camera::getRay(float u, float v) const {

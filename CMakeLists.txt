@@ -30,7 +30,7 @@ cuda_add_executable(Ray-racing-club
         Camera.h
         Vector3D.cu
         Vector3D.h
-        )
+        Managed.cu
+        Managed.h)
 
 target_link_libraries(Ray-racing-club Qt5::Widgets)
-

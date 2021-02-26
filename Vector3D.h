@@ -4,8 +4,8 @@
 
 #ifndef CMAKE_AND_CUDA_VECTOR3D_H
 #define CMAKE_AND_CUDA_VECTOR3D_H
+
 #include "cuda_runtime.h"
-#include "device_launch_parameters.h"
 
 class Vector3D {
 public:
@@ -33,7 +33,7 @@ public:
     __host__ __device__ static float dotProduct(const Vector3D& a, const Vector3D& b);
     __host__ __device__ static Vector3D crossProduct(const Vector3D& a, const Vector3D& b);
 
-    __device__ void atomAdd(const Vector3D& other);
+    __device__ void atomicAddVec(const Vector3D& other);
 
 private:
     float mCoords[3];
