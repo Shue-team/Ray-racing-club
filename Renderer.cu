@@ -1,7 +1,8 @@
 #include "Hittable/Sphere.h"
 #include "Renderer.h"
-#include "CommonMath.h"
-#include <cstdio>
+#include "Common/Math.h"
+#include <iostream>
+
 inline __device__ void writeColor(uchar8* pixelPtr, const Color& color, int samplesPerPixel) {
     float scale = 1.0f / samplesPerPixel;
 
@@ -10,8 +11,7 @@ inline __device__ void writeColor(uchar8* pixelPtr, const Color& color, int samp
     pixelPtr[2] = (uchar8) (256 * clamp(color[2] * scale, 0.0f, 0.999f));
 }
 
-__global__ void sampleRender(uchar8* colorData, const Camera* cam,
-                             Hittable** world, int samplesPerPixel) {
+__global__ void sampleRender(uchar8* colorData, const Camera* cam, Hittable** world) {
     extern __shared__ Color pixelColor[];
     (*pixelColor)[0] = (*pixelColor)[1] = (*pixelColor)[2] = 0.0f;
 
@@ -41,7 +41,7 @@ __global__ void sampleRender(uchar8* colorData, const Camera* cam,
 
     if (threadIdx.x == 0) {
         uchar8* pixelPtr = colorData + 3 * (j * gridDim.x + i);
-        writeColor(pixelPtr, (*pixelColor), samplesPerPixel);
+        writeColor(pixelPtr, (*pixelColor), blockDim.x);
     }
 }
 
@@ -68,11 +68,19 @@ Renderer::Renderer(int imgWidth, int imgHeight, int samplesPerPixel) {
 }
 
 uchar8* Renderer::render(const Camera* camera) {
+    clock_t start, stop;
+    start = clock();
+
     dim3 gridDim(mImgWidth, mImgHeight);
-    sampleRender<<<gridDim, mSamplesPerPixel, sizeof(Color)>>>(mColorBuff_d, camera, mWorld_d, mSamplesPerPixel);
-    cudaPeekAtLastError();
+    sampleRender<<<gridDim, mSamplesPerPixel, sizeof(Color)>>>(mColorBuff_d, camera, mWorld_d);
+
     size_t colorBuffSize = 3 * mImgWidth * mImgHeight;
     cudaMemcpy(mColorBuff_h, mColorBuff_d, colorBuffSize * sizeof(char), cudaMemcpyDeviceToHost);
+
+    stop = clock();
+    double timer_seconds = ((double)(stop - start)) / CLOCKS_PER_SEC;
+    std::cout << "took " << timer_seconds << " seconds.\n";
+
     return mColorBuff_h;
 }
 

@@ -10,9 +10,6 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
-#include "Renderer.h"
-#include <stdio.h>
-
 constexpr int imgWidth = 800;
 constexpr int imgHeight = 600;
 

@@ -19,7 +19,7 @@ cuda_add_executable(Ray-racing-club
         MainWindow.cpp
         MainWindow.h
         MainWindow.ui
-        CommonMath.h
+        Common/Math.h
         Hittable/Hittable.h
         Ray.h
         Renderer.cu

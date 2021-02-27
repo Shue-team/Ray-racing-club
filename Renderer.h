@@ -6,7 +6,7 @@
 #define RAY_RACING_CLUB_RENDERER_H
 
 #include "Camera.h"
-#include "CommonMath.h"
+#include "Common/Math.h"
 #include "Hittable/Hittable.h"
 
 class Renderer {

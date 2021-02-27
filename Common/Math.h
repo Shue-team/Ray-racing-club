@@ -2,8 +2,8 @@
 // Created by arseny on 06.02.2021.
 //
 
-#ifndef RAY_RACING_CLUB_COMMONMATH_H
-#define RAY_RACING_CLUB_COMMONMATH_H
+#ifndef RAY_RACING_CLUB_MATH_H
+#define RAY_RACING_CLUB_MATH_H
 
 #include <limits>
 #include <random>
@@ -18,4 +18,4 @@ __host__ __device__ const T& clamp( const T& value, const T& low, const T& high)
     return value < low ? low : high < value ? high : value;
 }
 
-#endif //RAY_RACING_CLUB_COMMONMATH_H
+#endif //RAY_RACING_CLUB_MATH_H
