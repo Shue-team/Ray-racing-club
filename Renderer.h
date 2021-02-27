@@ -24,7 +24,7 @@ private:
     uchar8* mColorBuff_d;
     uchar8* mColorBuff_h;
 
-    Hittable* mWorld;
+    Hittable** mWorld_d;
 };
 
 

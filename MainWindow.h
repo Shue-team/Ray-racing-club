@@ -6,8 +6,6 @@
 #define RAY_RACING_CLUB_MAINWINDOW_H
 
 #include <QWidget>
-#include <QGraphicsScene>
-#include <QGraphicsView>
 #include "Renderer.h"
 
 QT_BEGIN_NAMESPACE
@@ -24,6 +22,7 @@ public:
 
 private:
     Ui::MainWindow* mUi;
+    Renderer* mRenderer;
 
 private slots:
     void onRenderAction() const;

@@ -13,10 +13,14 @@
 #include "Renderer.h"
 #include <stdio.h>
 
+constexpr int imgWidth = 800;
+constexpr int imgHeight = 600;
 
 MainWindow::MainWindow(QWidget* parent) :
         QWidget(parent), mUi(new Ui::MainWindow) {
     mUi->setupUi(this);
+
+    mRenderer = new Renderer(imgWidth, imgHeight, 10);
 
     auto renderAction = new QAction(this);
     renderAction->setShortcut(Qt::Key_R);
@@ -26,19 +30,15 @@ MainWindow::MainWindow(QWidget* parent) :
 
 MainWindow::~MainWindow() {
     delete mUi;
+    delete mRenderer;
 }
 
 void MainWindow::onRenderAction() const {
-    int width = mUi->imageDisplay->width();
-    int height = mUi->imageDisplay->height();
-
-    Renderer renderer(width, height, 100);
-
-    float aspectRatio = width / height;
+    float aspectRatio = imgWidth / imgHeight;
     auto* camera = new Camera(aspectRatio);
 
-    uchar8* pixelData = renderer.render(camera);
+    uchar8* pixelData = mRenderer->render(camera);
 
-    QImage image(pixelData, width, height,QImage::Format_RGB888);
+    QImage image(pixelData, imgWidth, imgHeight, imgWidth * 3, QImage::Format_RGB888);
     mUi->imageDisplay->setPixmap(QPixmap::fromImage(image));
 }

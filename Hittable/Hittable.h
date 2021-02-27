@@ -20,7 +20,7 @@ struct HitRecord {
     }
 };
 
-class Hittable : public Managed {
+class Hittable {
 public:
     __host__ __device__ virtual bool hit(const Ray& ray, float tMin, float tMax, HitRecord& record) const = 0;
 };
