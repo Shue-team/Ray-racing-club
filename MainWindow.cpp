@@ -12,12 +12,18 @@
 
 constexpr int imgWidth = 800;
 constexpr int imgHeight = 600;
+constexpr int samplesPerPixel = 10;
 
 MainWindow::MainWindow(QWidget* parent) :
         QWidget(parent), mUi(new Ui::MainWindow) {
     mUi->setupUi(this);
 
-    mRenderer = new Renderer(imgWidth, imgHeight, 10);
+    RenderInfo renderInfo;
+    renderInfo.imgWidth = imgWidth;
+    renderInfo.imgHeight = imgHeight;
+    renderInfo.samplesPerPixel = samplesPerPixel;
+
+    mRenderer = new Renderer(renderInfo);
 
     auto renderAction = new QAction(this);
     renderAction->setShortcut(Qt::Key_R);

@@ -9,9 +9,23 @@
 #include "Common/Math.h"
 #include "Hittable/Hittable.h"
 
+struct RenderInfo {
+    int imgWidth;
+    int imgHeight;
+    int samplesPerPixel;
+    int threadBlockWidth;
+    int threadBlockHeight;
+
+    RenderInfo() {
+        threadBlockWidth = 8;
+        threadBlockHeight = 8;
+    }
+};
+
 class Renderer {
 public:
-    Renderer(int imgWidth, int imgHeight, int samplesPerPixel);
+    Renderer(const RenderInfo& renderInfo);
+
     uchar8* render(const Camera* camera);
 
     ~Renderer();
@@ -21,8 +35,12 @@ private:
     int mImgHeight;
     int mSamplesPerPixel;
 
-    uchar8* mColorBuff_d;
-    uchar8* mColorBuff_h;
+    int mThreadBlockWidth;
+    int mThreadBlockHeight;
+
+    int mColorDataSize;
+    uchar8* mColorData_d;
+    uchar8* mColorData_h;
 
     Hittable** mWorld_d;
 };
