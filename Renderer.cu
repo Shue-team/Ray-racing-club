@@ -27,8 +27,8 @@ __device__ Color getColor(const Ray& ray, Hittable* const* world) {
     return color;
 }
 
-__global__ void sampleRender(int imgWidth, int imgHeight, int samplesPerPixel,
-                             uchar8* colorData,
+__global__ void pixelRender(int imgWidth, int imgHeight, int samplesPerPixel,
+                             uchar8* colorData, curandState* randStateArr,
                              const Camera* cam, Hittable* const* world) {
 
     unsigned int x = threadIdx.x + blockIdx.x * blockDim.x;
@@ -36,18 +36,35 @@ __global__ void sampleRender(int imgWidth, int imgHeight, int samplesPerPixel,
 
     if (x >= imgWidth || y >= imgHeight) { return; }
 
-    Color pixelColor;
+    unsigned int pixelIdx = imgWidth * y + x;
+    curandState localRandState = randStateArr[pixelIdx];
 
+    unsigned int yMapped = imgHeight - y - 1;
+
+    Color pixelColor;
     for (int i = 0; i < samplesPerPixel; i++) {
-        float u = x / (float) (imgWidth - 1);
-        float v = (imgHeight - y - 1) / (float) (imgHeight - 1);
+        float xDisturbed = x + 1 - curand_uniform(&localRandState);
+        float yDisturbed = yMapped + 1 - curand_uniform(&localRandState);
+
+        float u = xDisturbed / (float) (imgWidth - 1);
+        float v = yDisturbed / (float) (imgHeight - 1);
 
         Ray ray = cam->getRay(u, v);
         pixelColor += getColor(ray, world);
     }
 
-    uchar8* pixelPtr = colorData + 3 * (imgWidth * y + x);
-    writeColor(pixelPtr, pixelColor, samplesPerPixel);
+    writeColor(&colorData[3 * pixelIdx], pixelColor, samplesPerPixel);
+}
+
+__global__ void initRandomState(int imgWidth, int imgHeight, unsigned int firstSeed,
+                           curandState* randStateArr) {
+    int x = threadIdx.x + blockIdx.x * blockDim.x;
+    int y = threadIdx.y + blockIdx.y * blockDim.y;
+
+    if((x >= imgWidth) || (y >= imgHeight)) return;
+
+    unsigned int pixelIdx = y * imgWidth + x;
+    curand_init(firstSeed + pixelIdx, 0, 0, &randStateArr[pixelIdx]);
 }
 
 __global__ void createWorld(Hittable** world) {
@@ -73,6 +90,18 @@ Renderer::Renderer(const RenderInfo& renderInfo) {
 
     cudaMalloc(&mWorld_d, sizeof(Hittable*));
     createWorld<<<1, 1>>>(mWorld_d);
+
+    cudaMalloc(&mRandStateArr, mImgWidth * mImgHeight * sizeof(curandState));
+
+    unsigned int seed = (unsigned int)time(nullptr);
+
+    int gridWidth = (mImgWidth + mThreadBlockWidth - 1) / mThreadBlockWidth;
+    int gridHeight = (mImgHeight + mThreadBlockHeight - 1) / mThreadBlockHeight;
+
+    dim3 gridDim(gridWidth, gridHeight);
+    dim3 blockDim(mThreadBlockWidth, mThreadBlockHeight);
+
+    initRandomState<<<gridDim, blockDim>>>(mImgWidth, mImgHeight, seed, mRandStateArr);
 }
 
 uchar8* Renderer::render(const Camera* camera) {
@@ -85,8 +114,8 @@ uchar8* Renderer::render(const Camera* camera) {
     dim3 gridDim(gridWidth, gridHeight);
     dim3 blockDim(mThreadBlockWidth, mThreadBlockHeight);
 
-    sampleRender<<<gridDim, blockDim>>>(mImgWidth, mImgHeight, mSamplesPerPixel,
-                                        mColorData_d,
+    pixelRender<<<gridDim, blockDim>>>(mImgWidth, mImgHeight, mSamplesPerPixel,
+                                        mColorData_d, mRandStateArr,
                                         camera, mWorld_d);
 
     cudaMemcpy(mColorData_h, mColorData_d, mColorDataSize * sizeof(uchar8), cudaMemcpyDeviceToHost);
@@ -103,6 +132,7 @@ Renderer::~Renderer() {
 
     cudaFree(mWorld_d);
     cudaFree(mColorData_d);
+    cudaFree(mRandStateArr);
 
     delete mColorData_h;
 }

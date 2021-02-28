@@ -74,11 +74,11 @@ Vector3D Vector3D::normalized() const {
     return *this / length();
 }
 
-__host__ __device__ float Vector3D::dotProduct(const Vector3D& a, const Vector3D& b) {
+float Vector3D::dotProduct(const Vector3D& a, const Vector3D& b) {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
-__host__ __device__ Vector3D Vector3D::crossProduct(const Vector3D& a, const Vector3D& b) {
+Vector3D Vector3D::crossProduct(const Vector3D& a, const Vector3D& b) {
     return Vector3D(a[1] * b[2] - a[2] * b[1],
                     a[2] * b[0] - a[0] * b[2],
                     a[0] * b[1] - a[1] * b[0]);

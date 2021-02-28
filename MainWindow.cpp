@@ -10,8 +10,8 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
-constexpr int imgWidth = 800;
-constexpr int imgHeight = 600;
+constexpr int imgWidth = 400;
+constexpr int imgHeight = 400;
 constexpr int samplesPerPixel = 10;
 
 MainWindow::MainWindow(QWidget* parent) :

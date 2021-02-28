@@ -9,6 +9,8 @@
 #include "Common/Math.h"
 #include "Hittable/Hittable.h"
 
+#include <curand_kernel.h>
+
 struct RenderInfo {
     int imgWidth;
     int imgHeight;
@@ -17,8 +19,8 @@ struct RenderInfo {
     int threadBlockHeight;
 
     RenderInfo() {
-        threadBlockWidth = 8;
-        threadBlockHeight = 8;
+        threadBlockWidth = 32;
+        threadBlockHeight = 32;
     }
 };
 
@@ -41,6 +43,8 @@ private:
     int mColorDataSize;
     uchar8* mColorData_d;
     uchar8* mColorData_h;
+
+    curandState* mRandStateArr;
 
     Hittable** mWorld_d;
 };
