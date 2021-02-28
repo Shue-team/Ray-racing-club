@@ -10,8 +10,8 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
-constexpr int imgWidth = 400;
-constexpr int imgHeight = 400;
+constexpr int imgWidth = 1280;
+constexpr int imgHeight = 720;
 constexpr int samplesPerPixel = 10;
 
 MainWindow::MainWindow(QWidget* parent) :
@@ -37,7 +37,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::onRenderAction() const {
-    float aspectRatio = imgWidth / imgHeight;
+    float aspectRatio = imgWidth / (float) imgHeight;
     auto* camera = new Camera(aspectRatio);
 
     uchar8* pixelData = mRenderer->render(camera);
