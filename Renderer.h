@@ -11,6 +11,8 @@
 
 #include <curand_kernel.h>
 
+class QImage;
+
 struct RenderInfo {
     int imgWidth;
     int imgHeight;
@@ -19,20 +21,22 @@ struct RenderInfo {
     int threadBlockHeight;
 
     RenderInfo() {
-        threadBlockWidth = 32;
-        threadBlockHeight = 32;
+        threadBlockWidth = 16;
+        threadBlockHeight = 16;
     }
 };
 
 class Renderer {
 public:
-    Renderer(const RenderInfo& renderInfo);
+    explicit Renderer(const RenderInfo& renderInfo);
 
-    uchar8* render(const Camera* camera);
+    QImage render(const Camera* camera);
 
     ~Renderer();
 
 private:
+    uchar8* renderRaw(const Camera* camera);
+
     int mImgWidth;
     int mImgHeight;
     int mSamplesPerPixel;
@@ -48,6 +52,5 @@ private:
 
     Hittable** mWorld_d;
 };
-
 
 #endif //RAY_RACING_CLUB_RENDERER_H

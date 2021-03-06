@@ -1,6 +1,7 @@
 #include "Hittable/Sphere.h"
 #include "Renderer.h"
 #include "Common/Math.h"
+
 #include <iostream>
 
 inline __device__ void writeColor(uchar8* pixelPtr, const Color& color, int samplesPerPixel) {
@@ -31,15 +32,15 @@ __global__ void pixelRender(int imgWidth, int imgHeight, int samplesPerPixel,
                              uchar8* colorData, curandState* randStateArr,
                              const Camera* cam, Hittable* const* world) {
 
-    unsigned int x = threadIdx.x + blockIdx.x * blockDim.x;
-    unsigned int y = threadIdx.y + blockIdx.y * blockDim.y;
+    uint32 x = threadIdx.x + blockIdx.x * blockDim.x;
+    uint32 y = threadIdx.y + blockIdx.y * blockDim.y;
 
     if (x >= imgWidth || y >= imgHeight) { return; }
 
-    unsigned int pixelIdx = imgWidth * y + x;
+    uint32 pixelIdx = imgWidth * y + x;
     curandState localRandState = randStateArr[pixelIdx];
 
-    unsigned int yMapped = imgHeight - y - 1;
+    uint32 yMapped = imgHeight - y - 1;
 
     Color pixelColor;
     for (int i = 0; i < samplesPerPixel; i++) {
@@ -56,14 +57,14 @@ __global__ void pixelRender(int imgWidth, int imgHeight, int samplesPerPixel,
     writeColor(&colorData[3 * pixelIdx], pixelColor, samplesPerPixel);
 }
 
-__global__ void initRandomState(int imgWidth, int imgHeight, unsigned int firstSeed,
+__global__ void initRandomState(int imgWidth, int imgHeight, uint32 firstSeed,
                            curandState* randStateArr) {
     int x = threadIdx.x + blockIdx.x * blockDim.x;
     int y = threadIdx.y + blockIdx.y * blockDim.y;
 
     if((x >= imgWidth) || (y >= imgHeight)) return;
 
-    unsigned int pixelIdx = y * imgWidth + x;
+    uint32 pixelIdx = y * imgWidth + x;
     curand_init(firstSeed + pixelIdx, 0, 0, &randStateArr[pixelIdx]);
 }
 
@@ -93,7 +94,7 @@ Renderer::Renderer(const RenderInfo& renderInfo) {
 
     cudaMalloc(&mRandStateArr, mImgWidth * mImgHeight * sizeof(curandState));
 
-    unsigned int seed = (unsigned int)time(nullptr);
+    uint32 seed = (uint32)time(nullptr);
 
     int gridWidth = (mImgWidth + mThreadBlockWidth - 1) / mThreadBlockWidth;
     int gridHeight = (mImgHeight + mThreadBlockHeight - 1) / mThreadBlockHeight;
@@ -104,7 +105,7 @@ Renderer::Renderer(const RenderInfo& renderInfo) {
     initRandomState<<<gridDim, blockDim>>>(mImgWidth, mImgHeight, seed, mRandStateArr);
 }
 
-uchar8* Renderer::render(const Camera* camera) {
+uchar8* Renderer::renderRaw(const Camera* camera) {
     clock_t start, stop;
     start = clock();
 
@@ -121,8 +122,8 @@ uchar8* Renderer::render(const Camera* camera) {
     cudaMemcpy(mColorData_h, mColorData_d, mColorDataSize * sizeof(uchar8), cudaMemcpyDeviceToHost);
 
     stop = clock();
-    double timer_seconds = ((double)(stop - start)) / CLOCKS_PER_SEC;
-    std::cout << "took " << timer_seconds << " seconds.\n";
+    double timerSeconds = ((double)(stop - start)) / CLOCKS_PER_SEC;
+    std::cout << "took " << timerSeconds << " seconds.\n";
 
     return mColorData_h;
 }

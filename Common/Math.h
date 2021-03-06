@@ -11,7 +11,9 @@
 #include "cuda_runtime.h"
 
 constexpr float infinity = std::numeric_limits<float>::infinity();
+
 using uchar8 = unsigned char;
+using uint32 = unsigned int;
 
 template<class T>
 __host__ __device__ const T& clamp( const T& value, const T& low, const T& high) {

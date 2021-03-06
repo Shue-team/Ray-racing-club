@@ -40,8 +40,6 @@ void MainWindow::onRenderAction() const {
     float aspectRatio = imgWidth / (float) imgHeight;
     auto* camera = new Camera(aspectRatio);
 
-    uchar8* pixelData = mRenderer->render(camera);
-
-    QImage image(pixelData, imgWidth, imgHeight, imgWidth * 3, QImage::Format_RGB888);
+    QImage image = mRenderer->render(camera);
     mUi->imageDisplay->setPixmap(QPixmap::fromImage(image));
 }

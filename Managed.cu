@@ -5,7 +5,7 @@
 #include "Managed.h"
 
 void* Managed::operator new(size_t len) {
-    void *ptr;
+    void* ptr;
     cudaMallocManaged(&ptr, len);
     return ptr;
 }

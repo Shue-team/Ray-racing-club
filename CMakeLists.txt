@@ -28,9 +28,9 @@ cuda_add_executable(Ray-racing-club
         Hittable/Sphere.h
         Camera.cu
         Camera.h
-        Vector3D.cu
-        Vector3D.h
+        Common/Vector3D.cu
+        Common/Vector3D.h
         Managed.cu
-        Managed.h)
+        Managed.h Renderer.cpp Ray.cpp)
 
 target_link_libraries(Ray-racing-club Qt5::Widgets)
