@@ -7,7 +7,7 @@ find_package(CUDA REQUIRED)
 set(CUDA_SEPARABLE_COMPILATION ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_PREFIX_PATH "C:/QtMSVC15/5.15.2/msvc2015_64")
+set(CMAKE_PREFIX_PATH "D:\\Qt\\5.15.2\\msvc2019_64\\lib\\cmake") #personal
 find_package(Qt5Widgets REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
@@ -31,6 +31,8 @@ cuda_add_executable(Ray-racing-club
         Common/Vector3D.cu
         Common/Vector3D.h
         Managed.cu
-        Managed.h Renderer.cpp Ray.cpp)
+        Managed.h
+        Renderer.cpp
+        Ray.cu)
 
 target_link_libraries(Ray-racing-club Qt5::Widgets)

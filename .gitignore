@@ -31,4 +31,12 @@
 *.out
 *.app
 /.vs
-/out/build/x64-Debug (по умолчанию)
+
+#Configurable
+*.json
+
+/out/build/x64-Debug/CMakeFiles
+/out/build/x64-Debug/Ray-racing-club_autogen
+/out/build/x64-Debug/Testing/Temporary
+/out/build/x64-Debug
+
