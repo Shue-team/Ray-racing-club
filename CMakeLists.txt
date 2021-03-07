@@ -33,6 +33,7 @@ cuda_add_executable(Ray-racing-club
         Managed.cu
         Managed.h
         Renderer.cpp
-        Ray.cu)
+        Ray.cu
+        Invalidatable.h)
 
 target_link_libraries(Ray-racing-club Qt5::Widgets)

@@ -2,8 +2,8 @@
 // Created by awesyr on 20.02.2021.
 //
 
-#ifndef CMAKE_AND_CUDA_VECTOR3D_H
-#define CMAKE_AND_CUDA_VECTOR3D_H
+#ifndef RAY_RACING_CLUB_VECTOR3D_H
+#define RAY_RACING_CLUB_VECTOR3D_H
 
 #include "cuda_runtime.h"
 
@@ -49,4 +49,4 @@ __host__ __device__ Vector3D operator*(const Vector3D& a, float t);
 __host__ __device__ Vector3D operator*(float t, const Vector3D& a);
 __host__ __device__ Vector3D operator/(const Vector3D& a, float t);
 
-#endif //CMAKE_AND_CUDA_VECTOR3D_H
+#endif //RAY_RACING_CLUB_VECTOR3D_H
