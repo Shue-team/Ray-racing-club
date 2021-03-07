@@ -22,8 +22,8 @@ struct RenderInfo {
     int threadBlockHeight;
 
     RenderInfo() {
-        threadBlockWidth = 33;
-        threadBlockHeight = 40;
+        threadBlockWidth = 16;
+        threadBlockHeight = 16;
     }
 };
 
