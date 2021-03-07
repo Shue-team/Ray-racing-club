@@ -3,13 +3,14 @@
 //
 
 #include "Managed.h"
+#include "Common/ErrorHandling.h"
 
 void* Managed::operator new(size_t len) {
     void* ptr;
-    cudaMallocManaged(&ptr, len);
+    catchError(cudaMallocManaged(&ptr, len));
     return ptr;
 }
 
 void Managed::operator delete(void* ptr) {
-    cudaFree(ptr);
+    catchError(cudaFree(ptr));
 }

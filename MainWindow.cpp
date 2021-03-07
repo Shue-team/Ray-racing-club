@@ -7,6 +7,8 @@
 #include <QAction>
 #include <QDebug>
 
+#include <iostream>
+
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
@@ -24,6 +26,9 @@ MainWindow::MainWindow(QWidget* parent) :
     renderInfo.samplesPerPixel = samplesPerPixel;
 
     mRenderer = new Renderer(renderInfo);
+    if (!mRenderer->isValid()) {
+        std::cerr << "Renderer wasn't created correctly" << std::endl;
+    }
 
     auto renderAction = new QAction(this);
     renderAction->setShortcut(Qt::Key_R);
@@ -37,6 +42,8 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::onRenderAction() const {
+    if (!mRenderer->isValid()) { return; }
+
     float aspectRatio = imgWidth / (float) imgHeight;
     auto* camera = new Camera(aspectRatio);
 

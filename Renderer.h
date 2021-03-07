@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Common/Math.h"
 #include "Hittable/Hittable.h"
+#include "Common/ErrorHandling.h"
 
 #include <curand_kernel.h>
 
@@ -21,12 +22,12 @@ struct RenderInfo {
     int threadBlockHeight;
 
     RenderInfo() {
-        threadBlockWidth = 16;
-        threadBlockHeight = 16;
+        threadBlockWidth = 33;
+        threadBlockHeight = 40;
     }
 };
 
-class Renderer {
+class Renderer : public Invalidatable {
 public:
     explicit Renderer(const RenderInfo& renderInfo);
 

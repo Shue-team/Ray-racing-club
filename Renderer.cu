@@ -86,13 +86,14 @@ Renderer::Renderer(const RenderInfo& renderInfo) {
     mThreadBlockHeight = renderInfo.threadBlockHeight;
 
     mColorDataSize = 3 * mImgWidth * mImgHeight;
-    cudaMalloc(&mColorData_d, mColorDataSize * sizeof(uchar8));
+    catchErrorInClass(cudaMalloc(&mColorData_d, mColorDataSize * sizeof(uchar8)));
     mColorData_h = new uchar8[mColorDataSize];
 
-    cudaMalloc(&mWorld_d, sizeof(Hittable*));
+    catchErrorInClass(cudaMalloc(&mWorld_d, sizeof(Hittable*)));
     createWorld<<<1, 1>>>(mWorld_d);
+    checkErrorInClass("createWorld");
 
-    cudaMalloc(&mRandStateArr, mImgWidth * mImgHeight * sizeof(curandState));
+    catchErrorInClass(cudaMalloc(&mRandStateArr, mImgWidth * mImgHeight * sizeof(curandState)));
 
     uint32 seed = (uint32)time(nullptr);
 
@@ -103,6 +104,7 @@ Renderer::Renderer(const RenderInfo& renderInfo) {
     dim3 blockDim(mThreadBlockWidth, mThreadBlockHeight);
 
     initRandomState<<<gridDim, blockDim>>>(mImgWidth, mImgHeight, seed, mRandStateArr);
+    checkErrorInClass("initRandomState");
 }
 
 uchar8* Renderer::renderRaw(const Camera* camera) {
@@ -118,8 +120,10 @@ uchar8* Renderer::renderRaw(const Camera* camera) {
     pixelRender<<<gridDim, blockDim>>>(mImgWidth, mImgHeight, mSamplesPerPixel,
                                         mColorData_d, mRandStateArr,
                                         camera, mWorld_d);
+    checkError("pixelRender");
 
-    cudaMemcpy(mColorData_h, mColorData_d, mColorDataSize * sizeof(uchar8), cudaMemcpyDeviceToHost);
+    catchError(cudaMemcpy(mColorData_h, mColorData_d,
+                                 mColorDataSize * sizeof(uchar8), cudaMemcpyDeviceToHost));
 
     stop = clock();
     double timerSeconds = ((double)(stop - start)) / CLOCKS_PER_SEC;
@@ -130,10 +134,11 @@ uchar8* Renderer::renderRaw(const Camera* camera) {
 
 Renderer::~Renderer() {
     destroyWorld<<<1, 1>>>(mWorld_d);
+    checkError("destroyWorld");
 
-    cudaFree(mWorld_d);
-    cudaFree(mColorData_d);
-    cudaFree(mRandStateArr);
+    catchError(cudaFree(mWorld_d));
+    catchError(cudaFree(mColorData_d));
+    catchError(cudaFree(mRandStateArr));
 
     delete mColorData_h;
 }
