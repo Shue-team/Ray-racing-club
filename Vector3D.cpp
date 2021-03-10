@@ -84,8 +84,8 @@ Vector3D Vector3D::crossProduct(const Vector3D& a, const Vector3D& b) {
                     a[0] * b[1] - a[1] * b[0]);
 }
 
-bool Vector3D::near_zero() const {
-    const auto s = 1e-8;
+bool Vector3D::nearZero() const {
+    const float s = 1e-8f;
     return (fabs(mCoords[0]) < s) && (fabs(mCoords[1]) < s) && (fabs(mCoords[2]) < s);
 }
 

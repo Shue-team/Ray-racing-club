@@ -12,12 +12,10 @@
 class Renderer {
 public:
     Renderer();
-
     QImage render(int imgWidth, int imgHeight) const;
 
 private:
     Color rayColor(const Ray& ray, Hittable* world, int depth) const;
-
     QColor toQColor(const Color& color) const;
 };
 

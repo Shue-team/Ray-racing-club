@@ -5,7 +5,7 @@
 #ifndef RAY_RACING_CLUB_MATERIAL_H
 #define RAY_RACING_CLUB_MATERIAL_H
 
-#include "Utility.h"
+#include "../CommonMath.h"
 #include "../Hittable/Hittable.h"
 
 class Material {
@@ -15,28 +15,30 @@ public:
 
 class Lambertian : public Material {
 public:
-    Lambertian(const Color& a) : albedo(a) {}
+    Lambertian(const Color& albedo) : mAlbedo(albedo) {}
     bool scatter(const Ray& rIn, const HitRecord& rec, Color& attenuation, Ray& scattered) const override;
-public:
-    Color albedo;
+
+private:
+    Color mAlbedo;
 };
 
 class Metal : public Material {
 public:
-    Metal(const Color& a, float f) : albedo(a), fuzz(f < 1 ? f : 1) {}
+    Metal(const Color& albedo, float fuzz) : mAlbedo(albedo), mFuzz(fuzz < 1 ? fuzz : 1) {}
     virtual bool scatter(const Ray& rIn, const HitRecord& rec, Color& attenuation, Ray& scattered) const override;
-public:
-    Color albedo;
-    float fuzz;
+
+private:
+    Color mAlbedo;
+    float mFuzz;
 };
 
 class Dielectric : public Material {
 public:
-    Dielectric(float ir) : RefractionIndex(ir) {}
+    Dielectric(float refractionIndex) : mRefractionIndex(refractionIndex) {}
     virtual bool scatter(const Ray& rIn, const HitRecord& rec, Color& attenuation, Ray& scattered) const override;
-public:
-    float RefractionIndex;
+
 private:
+    float mRefractionIndex;
     static float reflectance(float cosine, float refractionRatio);
 };
 

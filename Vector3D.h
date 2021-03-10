@@ -32,7 +32,7 @@ public:
     static Vector3D crossProduct(const Vector3D& a, const Vector3D& b);
 
 
-    bool near_zero() const;
+    bool nearZero() const;
 
 private:
     float mCoords[3];

@@ -24,10 +24,10 @@ add_executable(Ray-racing-club
         Hittable/Sphere.h
         Vector3D.cpp
         Vector3D.h
-        Hittable/World.cpp
-        Hittable/World.h
-        Materials/Utility.h
-        Materials/Utility.cpp
+        Hittable/HittableList.cpp
+        Hittable/HittableList.h
         Materials/Material.h
-        Materials/Material.cpp)
+        Materials/Material.cpp
+        CommonMath.h
+        CommonMath.cpp)
 target_link_libraries(Ray-racing-club Qt5::Widgets)
