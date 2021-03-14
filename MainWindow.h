@@ -18,14 +18,26 @@ Q_OBJECT
 public:
     explicit MainWindow(QWidget* parent = nullptr);
 
+    void paintEvent(QPaintEvent *event) override;
+
     ~MainWindow() override;
 
 private:
     Ui::MainWindow* mUi;
     Renderer* mRenderer;
-
+    Camera*  mCamera;
 private slots:
-    void onRenderAction() const;
+    //void onRenderAction();
+    void moveLeft();
+    void moveRight();
+    void moveDown();
+    void moveUp();
+    void zoomIn();
+    void zoomOut();
+    void rotateUp();
+    void rotateDown();
+    void rotateLeft();
+    void rotateRight();
 };
 
 #endif //RAY_RACING_CLUB_MAINWINDOW_H

@@ -14,7 +14,18 @@ public:
 
     __host__ __device__ Ray getRay(float u, float v) const;
 
+    __host__ void moveHorz(float x);
+
+    __host__ void moveVert(float y);
+
+    __host__ void moveDepth(float z);
+
+    __host__ void rotateOx(float alpha);
+
+    __host__ void rotateOy(float alpha);
+
 private:
+    __host__ void rotate(const Vector3D& axi, float alpha);
     Point3D mOrigin;
     Point3D mBottomLeftCorner;
     Vector3D mHorizontal;
