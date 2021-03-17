@@ -1,6 +1,7 @@
 #include "Hittable/Sphere.h"
 #include "Renderer.h"
 #include "Common/Math.h"
+#include "Hittable/HittableList.h"
 
 #include <iostream>
 
@@ -69,8 +70,12 @@ __global__ void initRandomState(int imgWidth, int imgHeight, uint32 firstSeed,
 }
 
 __global__ void createWorld(Hittable** world) {
-    Hittable* sphere = new Sphere(Vector3D(0.0f, 0.0f, -1.0f), 0.5f);
-    *world = sphere;
+    Hittable** list = new Hittable*[2];
+
+    list[0] = new Sphere(Point3D(0.0f, 0.0f, -1.0f), 0.5f);
+    list[1] = new Sphere(Point3D(0.0f, -100.5f, -1.0f), 100.0f);
+
+    *world = new HittableList(list, 2);
 }
 
 __global__ void destroyWorld(Hittable** world) {
