@@ -4,6 +4,8 @@
 
 #include "Camera.h"
 #include <cmath>
+#include "Quaternion.h"
+#include <iostream>
 
 Camera::Camera(float aspectRatio) {
     float viewportHeight = 2.0f;
@@ -23,23 +25,23 @@ Ray Camera::getRay(float u, float v) const {
 }
 
 // move along camera's horizontal axi
-void Camera::moveHorz(float x) {
-    Vector3D add(x * mHorizontal.normalized());
+void Camera::moveHorz(float dx) {
+    Vector3D add(dx * mHorizontal.normalized());
     mBottomLeftCorner += add;
     mOrigin += add;
 }
 
 // move along camera's vertical axi
-void Camera::moveVert(float y) {
-    Vector3D add(y * mVertical.normalized());
+void Camera::moveVert(float dy) {
+    Vector3D add(dy * mVertical.normalized());
     mBottomLeftCorner += add;
     mOrigin += add;
 }
 
 // moving screen to zoom
-void Camera::moveDepth(float z) {
+void Camera::moveDepth(float dz) {
     Vector3D add(Vector3D::crossProduct(mVertical, mHorizontal).normalized());
-    mBottomLeftCorner += -z * add;
+    mBottomLeftCorner += -dz * add;
     //mOrigin += z * add;
 }
 
@@ -54,29 +56,13 @@ void Camera::rotateOy(float alpha) {
 }
 
 /*
- * rotating hor vector, vert vector and screen using rotation matrix from wikipedia (rotation around arbitrary axi)
+ * rotating hor vector, vert vector and screen using quaternion
  * screen need to be rotated using lookAt vector (from origin to leftBottom point)
 */
-void Camera::rotate(const Vector3D &axi, float alpha) {
+void Camera::rotate(const Vector3D &axis, float alpha) {
     Vector3D lookAt = mBottomLeftCorner - mOrigin;
-    Vector3D vertRes, horRes, lookAtRes;
-    float sinBuf = sin(alpha);
-    float cosBuf = cos(alpha);
-    Vector3D ax = axi.normalized();
-    Vector3D matrix[3] = {
-            {cosBuf + (1.f - cosBuf) * ax[0] * ax[0], (1.f - cosBuf) * ax[0] * ax[1] - sinBuf * ax[2], (1.f - cosBuf) * ax[0] * ax[2] + sinBuf * ax[1]},
-            {(1.f - cosBuf) * ax[0] * ax[1] + sinBuf * ax[2], cosBuf + (1.f - cosBuf) * ax[1] * ax[1], (1.f - cosBuf) * ax[1] * ax[2] - sinBuf * ax[0]},
-            {(1.f - cosBuf) * ax[0] * ax[2] - sinBuf * ax[1], (1.f - cosBuf) * ax[1] * ax[2] + sinBuf * ax[0], cosBuf + (1.f - cosBuf) * ax[2] * ax[2]}
-    };
-    // rotation matrix and vectors multiplication
-    for (int i = 0; i < 3; i++) {
-        vertRes[i] = Vector3D::dotProduct(matrix[i], mVertical);
-        horRes[i] = Vector3D::dotProduct(matrix[i], mHorizontal);
-        lookAtRes[i] = Vector3D::dotProduct(matrix[i], lookAt);
-    }
-    // calculating final results
-    mVertical = vertRes;
-    mHorizontal = horRes;
-    mBottomLeftCorner = mOrigin + lookAtRes;
-}
-
+    Quaternion rotQuat(alpha, axis);
+    mVertical = rotQuat.rotate(mVertical);
+    mHorizontal = rotQuat.rotate(mHorizontal);
+    mBottomLeftCorner = mOrigin + rotQuat.rotate(lookAt);
+} 

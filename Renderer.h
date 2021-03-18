@@ -31,12 +31,12 @@ class Renderer : public Invalidatable {
 public:
     explicit Renderer(const RenderInfo& renderInfo);
 
-    QImage render(const Camera* camera);
+    QImage render(const Camera* camera, float& time);
 
     ~Renderer();
 
 private:
-    uchar8* renderRaw(const Camera* camera);
+    uchar8* renderRaw(const Camera* camera, float& time);
 
     int mImgWidth;
     int mImgHeight;

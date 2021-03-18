@@ -25,7 +25,7 @@ public:
     __host__ void rotateOy(float alpha);
 
 private:
-    __host__ void rotate(const Vector3D& axi, float alpha);
+    __host__ void rotate(const Vector3D& axis, float alpha);
     Point3D mOrigin;
     Point3D mBottomLeftCorner;
     Vector3D mHorizontal;

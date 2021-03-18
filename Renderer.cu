@@ -107,7 +107,7 @@ Renderer::Renderer(const RenderInfo& renderInfo) {
     checkErrorInClass("initRandomState");
 }
 
-uchar8* Renderer::renderRaw(const Camera* camera) {
+uchar8* Renderer::renderRaw(const Camera* camera, float& time) {
     clock_t start, stop;
     start = clock();
 
@@ -126,8 +126,8 @@ uchar8* Renderer::renderRaw(const Camera* camera) {
                                  mColorDataSize * sizeof(uchar8), cudaMemcpyDeviceToHost));
 
     stop = clock();
-    double timerSeconds = ((double)(stop - start)) / CLOCKS_PER_SEC;
-    std::cout << "took " << timerSeconds << " seconds.\n";
+    time =  ((float)(stop - start)) / CLOCKS_PER_SEC;
+    //std::cout << "took " << timerSeconds << " seconds.\n";
 
     return mColorData_h;
 }

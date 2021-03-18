@@ -9,6 +9,7 @@
 
 #include <iostream>
 
+#include <QMouseEvent>
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
@@ -16,12 +17,7 @@ constexpr int imgWidth = 1280;
 constexpr int imgHeight = 720;
 constexpr int samplesPerPixel = 10;
 
-/*
- * wasd - moving in Oxy plane
- * arrows - rotating camera
- * e - zoom in
- * q - zoom out
-*/
+
 MainWindow::MainWindow(QWidget* parent) :
         QWidget(parent), mUi(new Ui::MainWindow) {
     mUi->setupUi(this);
@@ -36,64 +32,18 @@ MainWindow::MainWindow(QWidget* parent) :
         std::cerr << "Renderer wasn't created correctly" << std::endl;
     }
     mCamera = new Camera((float) imgWidth / imgHeight);
+    mController = new Controller(mCamera, this);
+    installEventFilter(mController);
 
-    // render is automatic to test the camera
-    /*
     auto renderAction = new QAction(this);
-    renderAction->setShortcut(Qt::Key_R);
-    connect(renderAction, &QAction::triggered, this, &MainWindow::onRenderAction);
+    renderAction->setShortcut(Qt::Key_F);
+    connect(renderAction, &QAction::triggered, this, &MainWindow::toggleMouseTracking);
     addAction(renderAction);
-    */
-    auto renderAction = new QAction(this);
-    renderAction->setShortcut(Qt::Key_W);
-    connect(renderAction, &QAction::triggered, this, &MainWindow::moveUp);
-    addAction(renderAction);
-
+    
     renderAction = new QAction(this);
-    renderAction->setShortcut(Qt::Key_S);
-    connect(renderAction, &QAction::triggered, this, &MainWindow::moveDown);
+    renderAction->setShortcut(Qt::CTRL + Qt::Key_S);
+    connect(renderAction, &QAction::triggered, this, &MainWindow::querySave);
     addAction(renderAction);
-
-    renderAction = new QAction(this);
-    renderAction->setShortcut(Qt::Key_A);
-    connect(renderAction, &QAction::triggered, this, &MainWindow::moveLeft);
-    addAction(renderAction);
-
-    renderAction = new QAction(this);
-    renderAction->setShortcut(Qt::Key_D);
-    connect(renderAction, &QAction::triggered, this, &MainWindow::moveRight);
-    addAction(renderAction);
-
-    renderAction = new QAction(this);
-    renderAction->setShortcut(Qt::Key_Up);
-    connect(renderAction, &QAction::triggered, this, &MainWindow::rotateUp);
-    addAction(renderAction);
-
-    renderAction = new QAction(this);
-    renderAction->setShortcut(Qt::Key_Down);
-    connect(renderAction, &QAction::triggered, this, &MainWindow::rotateDown);
-    addAction(renderAction);
-
-    renderAction = new QAction(this);
-    renderAction->setShortcut(Qt::Key_Left);
-    connect(renderAction, &QAction::triggered, this, &MainWindow::rotateLeft);
-    addAction(renderAction);
-
-    renderAction = new QAction(this);
-    renderAction->setShortcut(Qt::Key_Right);
-    connect(renderAction, &QAction::triggered, this, &MainWindow::rotateRight);
-    addAction(renderAction);
-
-    renderAction = new QAction(this);
-    renderAction->setShortcut(Qt::Key_E);
-    connect(renderAction, &QAction::triggered, this, &MainWindow::zoomIn);
-    addAction(renderAction);
-
-    renderAction = new QAction(this);
-    renderAction->setShortcut(Qt::Key_Q);
-    connect(renderAction, &QAction::triggered, this, &MainWindow::zoomOut);
-    addAction(renderAction);
-
 }
 
 MainWindow::~MainWindow() {
@@ -104,64 +54,30 @@ MainWindow::~MainWindow() {
 
 void MainWindow::paintEvent(QPaintEvent *event) {
     if (!mRenderer->isValid()) { return; }
-    QImage image = mRenderer->render(mCamera);
+    float timeTook = 0;
+    QImage image = mRenderer->render(mCamera, timeTook);
     mUi->imageDisplay->setPixmap(QPixmap::fromImage(image));
+    this->setWindowTitle(QString("FPS: ") + QString::number(1.f / timeTook, 'f', 2));
+    if (fSave) {
+        if (!image.save("Screenshot.png", "PNG")) {
+            std::cout << "Error during screenshot save" << std::endl;
+        }
+        fSave = false;
+    }
 }
 
-// render is automatic to test the camera
-/*
-void MainWindow::onRenderAction() {
-    if (!mRenderer->isValid()) { return; }
-    update();
-}
-*/
-
-void MainWindow::moveLeft() {
-    mCamera->moveHorz(-0.1f);
-    update();
-}
-
-void MainWindow::moveRight() {
-    mCamera->moveHorz(0.1f);
-    update();
+void MainWindow::toggleMouseTracking() {
+    fTracking = !fTracking;
+    setMouseTracking(fTracking);
+    mUi->imageDisplay->setMouseTracking(fTracking);
+    if (fTracking) {
+        grabMouse(); // works not as we thought
+    }
+    else {
+        releaseMouse();
+    }
 }
 
-void MainWindow::moveDown() {
-    mCamera->moveVert(-0.1f);
-    update();
-}
-
-void MainWindow::moveUp() {
-    mCamera->moveVert(0.1f);
-    update();
-}
-
-void MainWindow::rotateUp() {
-    mCamera->rotateOx(0.1f);
-    update();
-}
-
-void MainWindow::rotateDown() {
-    mCamera->rotateOx(-0.1f);
-    update();
-}
-
-void MainWindow::rotateLeft() {
-    mCamera->rotateOy(0.1f);
-    update();
-}
-
-void MainWindow::rotateRight() {
-    mCamera->rotateOy(-0.1f);
-    update();
-}
-
-void MainWindow::zoomIn() {
-    mCamera->moveDepth(-0.1f);
-    update();
-}
-
-void MainWindow::zoomOut() {
-    mCamera->moveDepth(0.1f);
-    update();
+void MainWindow::querySave() {
+    fSave = true;
 }

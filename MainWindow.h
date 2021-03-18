@@ -7,6 +7,7 @@
 
 #include <QWidget>
 #include "Renderer.h"
+#include "Controller.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,18 +27,12 @@ private:
     Ui::MainWindow* mUi;
     Renderer* mRenderer;
     Camera*  mCamera;
+    Controller* mController;
+    bool fTracking = false;
+    bool fSave = false;
 private slots:
-    //void onRenderAction();
-    void moveLeft();
-    void moveRight();
-    void moveDown();
-    void moveUp();
-    void zoomIn();
-    void zoomOut();
-    void rotateUp();
-    void rotateDown();
-    void rotateLeft();
-    void rotateRight();
+    void toggleMouseTracking();
+    void querySave();
 };
 
 #endif //RAY_RACING_CLUB_MAINWINDOW_H
