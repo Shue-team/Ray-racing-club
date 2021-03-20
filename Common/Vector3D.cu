@@ -102,13 +102,13 @@ __device__ void Vector3D::atomicAddVec(const Vector3D& other) {
     atomicAdd(mCoords + 2, other[2]);
 }
 
-Vector3D Vector3D::random(float min, float max, curandState* randState)  {
+__device__ Vector3D Vector3D::random(float min, float max, curandState* randState)  {
     return Vector3D(randomFloat(min, max, randState),
                     randomFloat(min, max, randState),
                     randomFloat(min, max, randState));
 }
 
-Vector3D Vector3D::randomInUnitSphere(curandState* randState)  {
+__device__ Vector3D Vector3D::randomInUnitSphere(curandState* randState)  {
     while (true) {
         Vector3D p = random(-1.0f, 1.0f, randState);
         if (p.lengthSquared() >= 1.0f) continue;
@@ -116,7 +116,7 @@ Vector3D Vector3D::randomInUnitSphere(curandState* randState)  {
     }
 }
 
-Vector3D Vector3D::randomUnit(curandState* randState)  {
+__device__ Vector3D Vector3D::randomUnit(curandState* randState)  {
     return randomInUnitSphere(randState).normalized();
 }
 

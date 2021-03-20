@@ -39,9 +39,9 @@ public:
 
     __device__ void atomicAddVec(const Vector3D& other);
 
-    __host__ __device__ static Vector3D random(float min, float max, curandState* randState);
-    __host__ __device__ static Vector3D randomInUnitSphere(curandState* randState);
-    __host__ __device__ static Vector3D randomUnit(curandState* randState);
+    __device__ static Vector3D random(float min, float max, curandState* randState);
+    __device__ static Vector3D randomInUnitSphere(curandState* randState);
+    __device__ static Vector3D randomUnit(curandState* randState);
 
 private:
     float mCoords[3];

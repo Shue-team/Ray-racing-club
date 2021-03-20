@@ -4,7 +4,7 @@
 
 #include "Lambertian.h"
 
-bool Lambertian::scatter(const Ray& rIn, const HitRecord& rec,
+__device__ bool Lambertian::scatter(const Ray& rIn, const HitRecord& rec,
                          Color& attenuation, Ray& scattered,
                          curandState* randState) const {
     Vector3D scatterDirection = rec.normal + Vector3D::randomUnit(randState);

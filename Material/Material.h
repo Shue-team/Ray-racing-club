@@ -10,9 +10,9 @@
 
 class Material {
 public:
-    __host__ __device__ virtual bool scatter(const Ray& rIn, const HitRecord& rec,
-                                             Color& attenuation, Ray& scattered,
-                                             curandState* randState) const = 0;
+    __device__ virtual bool scatter(const Ray& rIn, const HitRecord& rec,
+                                    Color& attenuation, Ray& scattered,
+                                    curandState* randState) const = 0;
 };
 
 #endif //RAY_RACING_CLUB_MATERIAL_H

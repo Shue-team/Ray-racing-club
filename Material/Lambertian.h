@@ -11,9 +11,9 @@ class Lambertian : public Material {
 public:
     __host__ __device__ Lambertian(const Color& albedo) : mAlbedo(albedo) {}
 
-    __host__ __device__ bool scatter(const Ray& rIn, const HitRecord& rec,
-                                     Color& attenuation, Ray& scattered,
-                                     curandState* randState) const override;
+    __device__ bool scatter(const Ray& rIn, const HitRecord& rec,
+                            Color& attenuation, Ray& scattered,
+                            curandState* randState) const override;
 
 private:
     Color mAlbedo;
