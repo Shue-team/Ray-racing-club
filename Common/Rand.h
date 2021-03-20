@@ -8,7 +8,7 @@
 #include <curand_kernel.h>
 
 __device__ inline float randomFloat(curandState* randState) {
-    return 1 - curand_uniform(randState);
+    return 1.0f - curand_uniform(randState);
 }
 
 __device__ inline float randomFloat(float min, float max, curandState* randState) {
