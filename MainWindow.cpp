@@ -15,6 +15,7 @@
 constexpr int imgWidth = 1280;
 constexpr int imgHeight = 720;
 constexpr int samplesPerPixel = 10;
+constexpr int maxDepth = 50;
 
 MainWindow::MainWindow(QWidget* parent) :
         QWidget(parent), mUi(new Ui::MainWindow) {
@@ -24,6 +25,7 @@ MainWindow::MainWindow(QWidget* parent) :
     renderInfo.imgWidth = imgWidth;
     renderInfo.imgHeight = imgHeight;
     renderInfo.samplesPerPixel = samplesPerPixel;
+    renderInfo.maxDepth = maxDepth;
 
     mRenderer = new Renderer(renderInfo);
     if (!mRenderer->isValid()) {

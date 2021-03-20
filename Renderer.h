@@ -14,17 +14,14 @@
 
 class QImage;
 
+constexpr int threadBlockWidth = 16;
+constexpr int threadBlockHeight = 16;
+
 struct RenderInfo {
     int imgWidth;
     int imgHeight;
     int samplesPerPixel;
-    int threadBlockWidth;
-    int threadBlockHeight;
-
-    RenderInfo() {
-        threadBlockWidth = 16;
-        threadBlockHeight = 16;
-    }
+    int maxDepth;
 };
 
 class Renderer : public Invalidatable {
@@ -38,12 +35,9 @@ public:
 private:
     uchar8* renderRaw(const Camera* camera);
 
-    int mImgWidth;
-    int mImgHeight;
-    int mSamplesPerPixel;
-
-    int mThreadBlockWidth;
-    int mThreadBlockHeight;
+    RenderInfo mRi;
+    dim3 mGridDim;
+    dim3 mBlockDim;
 
     int mColorDataSize;
     uchar8* mColorData_d;

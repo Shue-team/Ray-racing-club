@@ -6,6 +6,7 @@
 #define RAY_RACING_CLUB_VECTOR3D_H
 
 #include "cuda_runtime.h"
+#include "Rand.h"
 
 class Vector3D {
 public:
@@ -19,6 +20,7 @@ public:
     __host__ __device__ Vector3D operator-() const;
 
     __host__ __device__ Vector3D& operator+=(const Vector3D& other);
+    __host__ __device__ Vector3D& operator*=(const Vector3D& other);
     __host__ __device__ Vector3D& operator*=(float value);
     __host__ __device__ Vector3D& operator/=(float value);
 
@@ -30,10 +32,16 @@ public:
 
     __host__ __device__ Vector3D normalized() const;
 
+    __host__ __device__ bool fuzzyIsNull() const;
+
     __host__ __device__ static float dotProduct(const Vector3D& a, const Vector3D& b);
     __host__ __device__ static Vector3D crossProduct(const Vector3D& a, const Vector3D& b);
 
     __device__ void atomicAddVec(const Vector3D& other);
+
+    __host__ __device__ static Vector3D random(float min, float max, curandState* randState);
+    __host__ __device__ static Vector3D randomInUnitSphere(curandState* randState);
+    __host__ __device__ static Vector3D randomUnit(curandState* randState);
 
 private:
     float mCoords[3];
@@ -44,6 +52,7 @@ using Color = Vector3D;
 
 __host__ __device__ Vector3D operator+(const Vector3D& a, const Vector3D& b);
 __host__ __device__ Vector3D operator-(const Vector3D& a, const Vector3D& b);
+__host__ __device__ Vector3D operator*(const Vector3D& a, const Vector3D& b);
 
 __host__ __device__ Vector3D operator*(const Vector3D& a, float t);
 __host__ __device__ Vector3D operator*(float t, const Vector3D& a);

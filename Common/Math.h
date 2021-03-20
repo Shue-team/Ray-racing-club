@@ -7,10 +7,14 @@
 
 #include <limits>
 #include <random>
+#include <cmath>
 
 #include "cuda_runtime.h"
 
-constexpr float infinity = std::numeric_limits<float>::infinity();
+namespace GlobalConstants {
+    constexpr float infinity = std::numeric_limits<float>::infinity();
+    constexpr float epsilon = std::numeric_limits<float>::epsilon();
+}
 
 using uchar8 = unsigned char;
 using uint32 = unsigned int;

@@ -8,9 +8,12 @@
 #include "../Ray.h"
 #include "../Managed.h"
 
+class Material;
+
 struct HitRecord {
     Point3D intersection;
     Vector3D normal;
+    Material* material;
     float t;
     bool frontFace;
 
