@@ -1,14 +1,22 @@
+#pragma once
 #include "Common/Vector3D.h"
 
 class Quaternion {
 public:
-    Quaternion(float angle, const Vector3D& axis);
-    Quaternion(float s, float x, float y, float z);
+    Quaternion(float scalar, const Vector3D& vector);
+    Quaternion(float scalar, float xPos, float yPos, float zPos);
+    
+    static Quaternion fromAxisAndAngle(const Vector3D& axis, float angle);
+
     Vector3D rotate(const Vector3D& vector);
-    Quaternion operator*(const Vector3D& a);
-    Quaternion operator*(const Quaternion& a);
+    
+    Quaternion conjugated() const;
+    
+    Vector3D vector() const;
+    float scalar() const;
 private:
-    Quaternion getConjugate();
     float mReal;
     Vector3D mImag;
 };
+
+Quaternion operator*(const Quaternion& a, const Quaternion& b);

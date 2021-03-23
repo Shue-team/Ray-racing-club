@@ -61,7 +61,7 @@ void Camera::rotateOy(float alpha) {
 */
 void Camera::rotate(const Vector3D &axis, float alpha) {
     Vector3D lookAt = mBottomLeftCorner - mOrigin;
-    Quaternion rotQuat(alpha, axis);
+    Quaternion rotQuat = Quaternion::fromAxisAndAngle(axis, alpha);
     mVertical = rotQuat.rotate(mVertical);
     mHorizontal = rotQuat.rotate(mHorizontal);
     mBottomLeftCorner = mOrigin + rotQuat.rotate(lookAt);

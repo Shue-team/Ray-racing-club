@@ -17,6 +17,11 @@ constexpr int imgWidth = 1280;
 constexpr int imgHeight = 720;
 constexpr int samplesPerPixel = 10;
 
+constexpr float moveStep = 0.1f;
+constexpr float rotStep = 0.05f;
+constexpr float zoomStep = 0.05f;
+constexpr float mouseAcc = 0.001f;
+
 
 MainWindow::MainWindow(QWidget* parent) :
         QWidget(parent), mUi(new Ui::MainWindow) {
@@ -32,7 +37,8 @@ MainWindow::MainWindow(QWidget* parent) :
         std::cerr << "Renderer wasn't created correctly" << std::endl;
     }
     mCamera = new Camera((float) imgWidth / imgHeight);
-    mController = new Controller(mCamera, this);
+    Controller::Steps steps = { moveStep, rotStep, zoomStep, mouseAcc };
+    mController = new Controller(mCamera, std::move(steps), this);
     installEventFilter(mController);
 
     auto renderAction = new QAction(this);

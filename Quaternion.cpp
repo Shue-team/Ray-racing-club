@@ -2,34 +2,35 @@
 #include <cmath>
 #include <iostream>
 
-Quaternion::Quaternion(float angle, const Vector3D& axis) {
-    mReal = cos(0.5f * angle);
-    mImag = sin(0.5f * angle) * axis.normalized();
+Quaternion Quaternion::fromAxisAndAngle(const Vector3D& axis, float angle) {
+    return Quaternion(cos(0.5f * angle), sin(0.5f * angle) * axis.normalized());
 }
 
-Quaternion::Quaternion(float s, float x, float y, float z):mImag(x, y, z) {
-    mReal = s;
-}
+Quaternion::Quaternion(float scalar, const Vector3D& vector):
+    mReal(scalar), mImag(vector) {}
+
+Quaternion::Quaternion(float scalar, float xPos, float yPos, float zPos):
+    mReal(scalar), mImag(xPos, yPos, zPos) {}
 
 Vector3D Quaternion::rotate(const Vector3D& vector) {
-    Quaternion reversed = getConjugate();
-    Quaternion result = *this * vector;
-    result = result * reversed;
+    Quaternion result = *this * Quaternion(0, vector) * conjugated();
     return result.mImag;
 }
 
-Quaternion Quaternion::operator*(const Vector3D& a) {
-    Vector3D imagPart = mReal * a + Vector3D::crossProduct(mImag, a);
-    float realPart = -1 * Vector3D::dotProduct(mImag, a);
-    return Quaternion(realPart, imagPart[0], imagPart[1], imagPart[2]);
+Quaternion operator*(const Quaternion& a, const Quaternion& b) {
+    float realPart = a.scalar() * b.scalar() - Vector3D::dotProduct(a.vector(), b.vector());
+    Vector3D imagPart = a.scalar() * b.vector() + b.scalar() * a.vector()+ Vector3D::crossProduct(a.vector(), b.vector());
+    return Quaternion(realPart, imagPart);
 }
 
-Quaternion Quaternion::operator*(const Quaternion& a) {
-    float realPart = mReal * a.mReal - Vector3D::dotProduct(mImag, a.mImag);
-    Vector3D imagPart = mReal * a.mImag + a.mReal * mImag + Vector3D::crossProduct(mImag, a.mImag);
-    return Quaternion(realPart, imagPart[0], imagPart[1], imagPart[2]);
+Quaternion Quaternion::conjugated() const {
+    return Quaternion(mReal, -mImag);
 }
 
-Quaternion Quaternion::getConjugate() {
-    return Quaternion(mReal, -mImag[0], -mImag[1], -mImag[2]);
+Vector3D Quaternion::vector() const {
+    return mImag;
+}
+
+float Quaternion::scalar() const {
+    return mReal;
 }
