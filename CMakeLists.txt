@@ -39,6 +39,13 @@ cuda_add_executable(Ray-racing-club
         Common/Invalidatable.h
         Common/Invalidatable.cpp
         Common/ErrorHandling.h
-        Common/ErrorHandling.cpp Material/Lambertian.cu Material/Lambertian.h Common/Rand.h)
+        Common/ErrorHandling.cpp
+        Material/Lambertian.cu
+        Material/Lambertian.h
+        Common/Rand.h
+        Material/Metal.h
+        Material/Metal.cu
+        Material/Dielectric.cu
+        Material/Dielectric.h)
 
 target_link_libraries(Ray-racing-club Qt5::Widgets)

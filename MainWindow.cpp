@@ -12,8 +12,8 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
-constexpr int imgWidth = 1280;
-constexpr int imgHeight = 720;
+constexpr int imgWidth = 700;
+constexpr int imgHeight = 450;
 constexpr int samplesPerPixel = 10;
 constexpr int maxDepth = 50;
 

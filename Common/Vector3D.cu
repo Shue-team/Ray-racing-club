@@ -120,6 +120,17 @@ __device__ Vector3D Vector3D::randomUnit(curandState* randState)  {
     return randomInUnitSphere(randState).normalized();
 }
 
+Vector3D Vector3D::reflect(const Vector3D& v, const Vector3D& n) {
+    return v - 2 * dotProduct(v, n) * n;
+}
+
+Vector3D Vector3D::refract(const Vector3D& uv, const Vector3D& n, float etaiOverEtat) {
+    float cosTheta = fmin(Vector3D::dotProduct(-uv, n), 1.0f);
+    Vector3D rOutPerp = etaiOverEtat * (uv + cosTheta * n);
+    Vector3D rOutParallel = -sqrt(fabs(1.0f - rOutPerp.lengthSquared())) * n;
+    return rOutPerp + rOutParallel;
+}
+
 Vector3D operator+(const Vector3D& a, const Vector3D& b) {
     return Vector3D(a[0] + b[0], a[1] + b[1], a[2] + b[2]);
 }

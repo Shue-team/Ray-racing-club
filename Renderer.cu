@@ -7,6 +7,8 @@
 #include "Common/Rand.h"
 
 #include "Material/Lambertian.h"
+#include "Material/Metal.h"
+#include "Material/Dielectric.h"
 
 #include <iostream>
 
@@ -91,14 +93,19 @@ __global__ void initRandomState(int imgWidth, int imgHeight, uint32 firstSeed,
 }
 
 __global__ void createWorld(Hittable** world) {
-    Hittable** list = new Hittable*[2];
+    Hittable** list = new Hittable*[4];
 
-    auto* material = new Lambertian(Color(0.5f, 0.5f, 0.5f));
+    auto* center = new Lambertian(Color(0.7f, 0.3f, 0.3f));
+    auto* left = new Metal(Color(0.8f, 0.8f, 0.8f), 0.3f);
+    auto* right = new Dielectric(1.5f);
+    auto* ground = new Lambertian(Color(0.8f, 0.8f, 0.0f));
 
-    list[0] = new Sphere(Point3D(0.0f, 0.0f, -1.0f), 0.5f, material);
-    list[1] = new Sphere(Point3D(0.0f, -100.5f, -1.0f), 100.0f, material);
+    list[0] = new Sphere(Point3D(0.0f, 0.0f, -1.0f), 0.5f, center);
+    list[1] = new Sphere(Point3D(-1.0f, 0.0f, -1.0f), 0.5f, left);
+    list[2] = new Sphere(Point3D(0.0f, -100.5f, -1.0f), 100.0f, ground);
+    list[3] = new Sphere(Point3D(1.0f, 0.0f, -1.0f), 0.5f, right);
 
-    *world = new HittableList(list, 2);
+    *world = new HittableList(list, 4);
 }
 
 __global__ void destroyWorld(Hittable** world) {

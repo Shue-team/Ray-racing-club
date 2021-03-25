@@ -24,4 +24,6 @@ __host__ __device__ const T& clamp( const T& value, const T& low, const T& high)
     return value < low ? low : high < value ? high : value;
 }
 
+
+
 #endif //RAY_RACING_CLUB_MATH_H

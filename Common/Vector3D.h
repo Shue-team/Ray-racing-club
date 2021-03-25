@@ -43,6 +43,9 @@ public:
     __device__ static Vector3D randomInUnitSphere(curandState* randState);
     __device__ static Vector3D randomUnit(curandState* randState);
 
+    __host__ __device__ static Vector3D reflect(const Vector3D& v, const Vector3D& n);
+    __host__ __device__ static Vector3D refract(const Vector3D& uv, const Vector3D& n, float etaiOverEtat);
+
 private:
     float mCoords[3];
 };

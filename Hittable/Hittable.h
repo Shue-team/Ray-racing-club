@@ -27,7 +27,7 @@ class Hittable {
 public:
     __host__ __device__ virtual bool hit(const Ray& ray, float tMin, float tMax, HitRecord& record) const = 0;
 
-    __host__ __device__ virtual ~Hittable() = default;
+    __host__ __device__ virtual ~Hittable() {}
 };
 
 #endif //RAY_RACING_CLUB_HITTABLE_H
