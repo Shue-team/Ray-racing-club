@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 project(Ray-racing-club LANGUAGES CXX CUDA)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(CUDA REQUIRED)
 set(CUDA_SEPARABLE_COMPILATION ON)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_PREFIX_PATH "D:\\Qt\\5.15.2\\msvc2019_64\\lib\\cmake") #personal
 find_package(Qt5Widgets REQUIRED)
 
@@ -14,35 +13,37 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 cuda_add_executable(Ray-racing-club
         Main.cpp
-        MainWindow.cpp
-        MainWindow.h
-        MainWindow.ui
-        Common/Math.h
+        UI/MainWindow.cpp
+        UI/MainWindow.h
+        UI/MainWindow.ui
+        Math/Math.h
         Hittable/Hittable.h
-        Ray.h
-        Renderer.cu
-        Renderer.h
+        Math/Ray.h
+        Render/Renderer.cu
+        Render/Renderer.h
         Hittable/Sphere.cu
         Hittable/Sphere.h
         Hittable/HittableList.h
         Hittable/HittableList.cu
-        Camera.cu
-        Camera.h
-        Common/Vector3D.cu
-        Common/Vector3D.h
-        Managed.cu
-        Managed.h
-        Renderer.cpp
-        Ray.cu
-        Common/Invalidatable.h
-        Common/Invalidatable.cpp
-        Common/ErrorHandling.h
-        Common/ErrorHandling.cpp
+        Render/Camera.cu
+        Render/Camera.h
+        Math/Vector3D.cu
+        Math/Vector3D.h
+        Memory/Unified.cu
+        Memory/Unified.h
+        Render/Renderer.cpp
+        Math/Ray.cu
+        ErrorProcessing/Invalidatable.h
+        ErrorProcessing/Invalidatable.cpp
+        ErrorProcessing/ErrorHandling.h
+        ErrorProcessing/ErrorHandling.cpp
         Material/Lambertian.cu
         Material/Lambertian.h
-        Common/Rand.h
+        Math/Rand.h
         Material/Metal.h
         Material/Metal.cu
         Material/Dielectric.cu

@@ -5,10 +5,10 @@
 #ifndef RAY_RACING_CLUB_CAMERA_H
 #define RAY_RACING_CLUB_CAMERA_H
 
-#include "Ray.h"
-#include "Managed.h"
+#include "../Math/Ray.h"
+#include "../Memory/Unified.h"
 
-class Camera : public Managed {
+class Camera : public Unified {
 public:
     __host__ __device__ Camera(float aspectRatio);
 

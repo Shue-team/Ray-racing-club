@@ -1,14 +1,14 @@
 #include "Renderer.h"
 
-#include "Hittable/Sphere.h"
-#include "Hittable/HittableList.h"
+#include "../Hittable/Sphere.h"
+#include "../Hittable/HittableList.h"
 
-#include "Common/Math.h"
-#include "Common/Rand.h"
+#include "../Math/Math.h"
+#include "../Math/Rand.h"
 
-#include "Material/Lambertian.h"
-#include "Material/Metal.h"
-#include "Material/Dielectric.h"
+#include "../Material/Lambertian.h"
+#include "../Material/Metal.h"
+#include "../Material/Dielectric.h"
 
 #include <iostream>
 

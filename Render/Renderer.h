@@ -6,9 +6,9 @@
 #define RAY_RACING_CLUB_RENDERER_H
 
 #include "Camera.h"
-#include "Common/Math.h"
-#include "Hittable/Hittable.h"
-#include "Common/ErrorHandling.h"
+#include "../Math/Math.h"
+#include "../Hittable/Hittable.h"
+#include "../ErrorProcessing/ErrorHandling.h"
 
 #include <curand_kernel.h>
 

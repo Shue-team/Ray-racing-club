@@ -5,8 +5,7 @@
 #ifndef RAY_RACING_CLUB_HITTABLE_H
 #define RAY_RACING_CLUB_HITTABLE_H
 
-#include "../Ray.h"
-#include "../Managed.h"
+#include "../Math/Ray.h"
 
 class Material;
 
