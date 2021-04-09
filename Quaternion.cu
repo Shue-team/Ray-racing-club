@@ -1,6 +1,5 @@
 #include "Quaternion.h"
 #include <cmath>
-#include <iostream>
 
 Quaternion Quaternion::fromAxisAndAngle(const Vector3D& axis, float angle) {
     return Quaternion(cos(0.5f * angle), sin(0.5f * angle) * axis.normalized());

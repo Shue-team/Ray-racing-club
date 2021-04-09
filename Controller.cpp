@@ -1,6 +1,6 @@
 #include "Controller.h"
 
-Controller::Controller(Camera* cam, Controller::Steps&& steps, QObject* parent):QObject(parent) {
+Controller::Controller(Camera* cam, Controller::Steps& steps, QObject* parent):QObject(parent) {
     mCam = cam;
     mMoveStep = steps.moveStep;
     mRotStep = steps.rotStep;

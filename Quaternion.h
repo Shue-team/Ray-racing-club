@@ -3,20 +3,20 @@
 
 class Quaternion {
 public:
-    Quaternion(float scalar, const Vector3D& vector);
-    Quaternion(float scalar, float xPos, float yPos, float zPos);
+    __host__ __device__ Quaternion(float scalar, const Vector3D& vector);
+    __host__ __device__ Quaternion(float scalar, float xPos, float yPos, float zPos);
     
-    static Quaternion fromAxisAndAngle(const Vector3D& axis, float angle);
+    __host__ __device__ static Quaternion fromAxisAndAngle(const Vector3D& axis, float angle);
 
-    Vector3D rotate(const Vector3D& vector);
+    __host__ __device__ Vector3D rotate(const Vector3D& vector);
     
-    Quaternion conjugated() const;
+    __host__ __device__ Quaternion conjugated() const;
     
-    Vector3D vector() const;
-    float scalar() const;
+    __host__ __device__ Vector3D vector() const;
+    __host__ __device__ float scalar() const;
 private:
     float mReal;
     Vector3D mImag;
 };
 
-Quaternion operator*(const Quaternion& a, const Quaternion& b);
+__host__ __device__ Quaternion operator*(const Quaternion& a, const Quaternion& b);

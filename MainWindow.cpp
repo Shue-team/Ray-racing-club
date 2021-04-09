@@ -12,6 +12,7 @@
 #include <QMouseEvent>
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include "Camera.h"
 
 constexpr int imgWidth = 1280;
 constexpr int imgHeight = 720;
@@ -31,14 +32,25 @@ MainWindow::MainWindow(QWidget* parent) :
     renderInfo.imgWidth = imgWidth;
     renderInfo.imgHeight = imgHeight;
     renderInfo.samplesPerPixel = samplesPerPixel;
-
+    
     mRenderer = new Renderer(renderInfo);
+    
     if (!mRenderer->isValid()) {
         std::cerr << "Renderer wasn't created correctly" << std::endl;
     }
-    mCamera = new Camera((float) imgWidth / imgHeight);
+
+    Camera::CamParams params;
+    params.lookFrom = { 0, 0, 0 };
+    params.lookAt = { 0, 0, -1 };
+    params.vUp = { 0, 1, 0 };
+    params.aspectRatio = (float)imgWidth / imgHeight;
+    params.vfov = 90;
+    params.aperture = 0.1;
+    params.focusDist = 1;
+    mCamera = new Camera(params);
+
     Controller::Steps steps = { moveStep, rotStep, zoomStep, mouseAcc };
-    mController = new Controller(mCamera, std::move(steps), this);
+    mController = new Controller(mCamera, steps, this);
     installEventFilter(mController);
 
     auto renderAction = new QAction(this);

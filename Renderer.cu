@@ -50,7 +50,7 @@ __global__ void pixelRender(int imgWidth, int imgHeight, int samplesPerPixel,
         float u = xDisturbed / (float) (imgWidth - 1);
         float v = yDisturbed / (float) (imgHeight - 1);
 
-        Ray ray = cam->getRay(u, v);
+        Ray ray = cam->getRay(u, v, &localRandState);
         pixelColor += getColor(ray, world);
     }
 
@@ -124,10 +124,8 @@ uchar8* Renderer::renderRaw(const Camera* camera, float& time) {
 
     catchError(cudaMemcpy(mColorData_h, mColorData_d,
                                  mColorDataSize * sizeof(uchar8), cudaMemcpyDeviceToHost));
-
     stop = clock();
     time =  ((float)(stop - start)) / CLOCKS_PER_SEC;
-    //std::cout << "took " << timerSeconds << " seconds.\n";
 
     return mColorData_h;
 }

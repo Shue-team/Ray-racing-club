@@ -1,58 +1,85 @@
+#include "Camera.h"
 //
 // Created by arseny on 07.02.2021.
 //
 
-#include "Camera.h"
 #include <cmath>
-#include "Quaternion.h"
 #include <iostream>
+#include "Quaternion.h"
+#include "Camera.h"
 
-Camera::Camera(float aspectRatio) {
-    float viewportHeight = 2.0f;
-    float viewportWidth = viewportHeight * aspectRatio;
-    float focalLength = 1.0f;
+constexpr float pi = 3.14159265;
 
-    mOrigin = Point3D(0.0f, 0.0f, 0.0f);
-    mHorizontal = Vector3D(viewportWidth, 0.0f, 0.0f);
-    mVertical = Vector3D(0.0f, viewportHeight, 0.0f);
 
-    Vector3D vUp(0.0f, 0.0f, focalLength);
-    mBottomLeftCorner = mOrigin - mHorizontal / 2.0f - mVertical / 2.0f - vUp;
+Camera::Camera(const Camera::CamParams& params) {
+    w = params.lookFrom - params.lookAt;
+    w = w.normalized();
+    u = Vector3D::crossProduct(params.vUp, w);
+    u = u.normalized();
+    v = Vector3D::crossProduct(w, u);
+    
+    mOrigin = params.lookFrom;
+
+    mLensRadius = 0.5f * params.aperture;
+    mVFOV = params.vfov;
+    mAspectRatio = params.aspectRatio;
+    mFocusDist = params.focusDist;
+    applyFOV();
 }
 
-Ray Camera::getRay(float u, float v) const {
-    return Ray(mOrigin, mBottomLeftCorner + u * mHorizontal + v * mVertical - mOrigin);
+void Camera::applyFOV() {
+    float theta = mVFOV / 180.f * pi;
+    float h = tanf(theta / 2);
+    float viewportHeight = 2.0f * h;
+    float viewportWidth = viewportHeight * mAspectRatio;
+    mHorizontal = mFocusDist * viewportWidth * u;
+    mVertical = mFocusDist * viewportHeight * v;
+    mBottomLeftCorner = mOrigin - 0.5f * mHorizontal - 0.5f * mVertical - mFocusDist * w;
+}
+
+__device__ Vector3D Camera::getRandomInUnitDisk(curandState* randState) const {
+    while (true) {
+        Vector3D vec((curand_uniform(randState) - 0.5f) * 2, (curand_uniform(randState) - 0.5f) * 2, 0);
+        if (vec.lengthSquared() >= 1) {
+            continue;
+        }
+        return vec;
+    }
+}
+
+__device__ Ray Camera::getRay(float s, float t, curandState* randState) const {
+    Vector3D rd = mLensRadius * getRandomInUnitDisk(randState);
+    Vector3D offset = u * rd.x() + v * rd.y();
+    return Ray(mOrigin + offset, mBottomLeftCorner + s * mHorizontal + t * mVertical - mOrigin - offset);
 }
 
 // move along camera's horizontal axi
 void Camera::moveHorz(float dx) {
-    Vector3D add(dx * mHorizontal.normalized());
+    Vector3D add(dx * u);
     mBottomLeftCorner += add;
     mOrigin += add;
 }
 
 // move along camera's vertical axi
 void Camera::moveVert(float dy) {
-    Vector3D add(dy * mVertical.normalized());
+    Vector3D add(dy * v);
     mBottomLeftCorner += add;
     mOrigin += add;
 }
 
 // moving screen to zoom
 void Camera::moveDepth(float dz) {
-    Vector3D add(Vector3D::crossProduct(mVertical, mHorizontal).normalized());
-    mBottomLeftCorner += -dz * add;
-    //mOrigin += z * add;
+    mBottomLeftCorner += dz * w;
 }
 
 // rotation around camera's horizontal axi
 void Camera::rotateOx(float alpha) {
-    rotate(mHorizontal, alpha);
+    rotate(u, alpha);
 }
 
 // rotation around camera's vertical axi
 void Camera::rotateOy(float alpha) {
-    rotate(mVertical, alpha);
+    rotate(v, alpha);
 }
 
 /*
@@ -60,9 +87,11 @@ void Camera::rotateOy(float alpha) {
  * screen need to be rotated using lookAt vector (from origin to leftBottom point)
 */
 void Camera::rotate(const Vector3D &axis, float alpha) {
-    Vector3D lookAt = mBottomLeftCorner - mOrigin;
     Quaternion rotQuat = Quaternion::fromAxisAndAngle(axis, alpha);
-    mVertical = rotQuat.rotate(mVertical);
-    mHorizontal = rotQuat.rotate(mHorizontal);
-    mBottomLeftCorner = mOrigin + rotQuat.rotate(lookAt);
-} 
+    v = rotQuat.rotate(v);
+    u = rotQuat.rotate(u);
+    w = rotQuat.rotate(w);
+    applyFOV();
+}
+
+

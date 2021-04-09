@@ -25,9 +25,9 @@ public:
 
 private:
     Ui::MainWindow* mUi;
-    Renderer* mRenderer;
-    Camera*  mCamera;
-    Controller* mController;
+    Renderer* mRenderer = nullptr;
+    Camera*  mCamera = nullptr;
+    Controller* mController = nullptr;
     bool fTracking = false;
     bool fSave = false;
 private slots:

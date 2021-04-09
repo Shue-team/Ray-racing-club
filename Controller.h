@@ -21,7 +21,7 @@ public:
         float zoomStep;
         float mouseAcc;
     };
-    Controller(Camera* cam, Steps&& steps, QObject* parent = nullptr);
+    Controller(Camera* cam, Steps& steps, QObject* parent = nullptr);
 
     bool eventFilter(QObject* object, QEvent* event) override;
 private:
