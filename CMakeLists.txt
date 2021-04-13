@@ -29,5 +29,7 @@ add_executable(Ray-racing-club
         Materials/Material.h
         Materials/Material.cpp
         CommonMath.h
-        CommonMath.cpp)
+        CommonMath.cpp
+        Hittable/Triangle.h
+        Hittable/Triangle.cpp)
 target_link_libraries(Ray-racing-club Qt5::Widgets)

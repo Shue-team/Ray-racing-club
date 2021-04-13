@@ -4,6 +4,7 @@
 
 #include "Renderer.h"
 #include "Hittable/Sphere.h"
+#include "Hittable/Triangle.h"
 #include "Hittable/HittableList.h"
 
 Renderer::Renderer() {
@@ -12,19 +13,24 @@ Renderer::Renderer() {
 
 HittableList* createWorld() {
     HittableList* world = new HittableList;
-    Material* matCenter = new Metal(Color(0.7f, 0.3f, 0.3f), 0.0f);
-    Material* matRight = new Dielectric(1.5f);
-    Material* matLeft = new Lambertian(Color(0.8f, 0.8f, 0.8f));
-    Material* matGround = new Lambertian(Color(0.8f, 0.8f, 0.0f));
 
-    Hittable* sphere1 = new Sphere(Vector3D(0.0f, 0.0f, -1.0f), 0.5f, matCenter);
-    Hittable* sphere2 = new Sphere(Vector3D(1.0f, 0.0f, -1.0f), 0.5f, matRight);
-    Hittable* sphere3 = new Sphere(Vector3D(-1.0f, 0.0f, -1.0f), 0.5f, matLeft);
+    Material* matGround = new Lambertian(Color(0.8f, 0.8f, 0.0f));
     Hittable* ground = new Sphere(Vector3D(0.0f, 100.5f, -1.0f), 100.0f, matGround);
 
-    world->add(sphere1);
-    world->add(sphere2);
-    world->add(sphere3);
+    Material* mat1 = new Metal(Color(0.7f, 0.3f, 0.3f), 0.0f);
+    Material* mat2 = new Metal(Color(0.7f, 0.3f, 0.3f), 0.0f);
+    Material* mat3 = new Metal(Color(0.8f, 0.8f, 0.8f), 0.0f);
+    Material* mat4 = new Metal(Color(0.8f, 0.8f, 0.8f), 0.0f);
+
+    Hittable* tri1 = new Triangle(Vector3D(0.0f, 0.5f, -1.0f),  Vector3D(0.0f, -0.5f, -1.0f), Vector3D(1.0f, 0.5f, -2.0f), mat1);
+    Hittable* tri2 = new Triangle(Vector3D(0.0f, -0.5f, -1.0f), Vector3D(1.0f, -0.5f, -2.0f), Vector3D(1.0f, 0.5f, -2.0f), mat2);
+    Hittable* tri3 = new Triangle(Vector3D(0.0f, 0.5f, -1.0f), Vector3D(-1.0f, 0.5f, -2.0f), Vector3D(0.0f, -0.5f, -1.0f),  mat3);
+    Hittable* tri4 = new Triangle(Vector3D(0.0f, -0.5f, -1.0f),  Vector3D(-1.0f, 0.5f, -2.0f), Vector3D(-1.0f, -0.5f, -2.0f), mat4);
+
+    world->add(tri1);
+    world->add(tri2);
+    world->add(tri3);
+    world->add(tri4);
     world->add(ground);
 
     return world;
@@ -38,7 +44,7 @@ QImage Renderer::render(int imgWidth, int imgHeight) const {
     double viewportHeight = 2.0;
     double viewportWidth =  aspectRatio * viewportHeight;
     const int samplesPerPixel = 20;
-    const int maxDepth = 10;
+    const int maxDepth = 15;
 
     Point3D origin(0, 0, 0);
     Vector3D horizontal(viewportWidth, 0, 0);
