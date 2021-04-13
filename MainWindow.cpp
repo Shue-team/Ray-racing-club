@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget* parent) :
         std::cerr << "Renderer wasn't created correctly" << std::endl;
     }
 
-    Camera::CamParams params;
+    CamParams params;
     params.lookFrom = { 0, 0, 0 };
     params.lookAt = { 0, 0, -1 };
     params.vUp = { 0, 1, 0 };

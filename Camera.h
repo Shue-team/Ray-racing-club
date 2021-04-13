@@ -9,17 +9,18 @@
 #include "Managed.h"
 #include <curand_kernel.h>
 
+struct CamParams {
+    Point3D lookFrom;
+    Point3D lookAt;
+    Vector3D vUp;
+    float aspectRatio;
+    float vfov;
+    float aperture;
+    float focusDist;
+};
+
 class Camera : public Managed {
 public:
-    struct CamParams {
-        Point3D lookFrom;
-        Point3D lookAt;
-        Vector3D vUp;
-        float aspectRatio;
-        float vfov;
-        float aperture;
-        float focusDist;
-    };
 
     __host__ __device__ Camera(const CamParams& params);
 
@@ -38,7 +39,6 @@ public:
 private:
     __host__ __device__ void rotate(const Vector3D& axis, float alpha);
     __host__ __device__ void applyFOV();
-    __device__ Vector3D getRandomInUnitDisk(curandState* randState) const;
     Point3D mOrigin;
     Point3D mBottomLeftCorner;
     Vector3D u, v, w;

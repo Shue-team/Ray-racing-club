@@ -109,3 +109,13 @@ Vector3D operator*(float t, const Vector3D& a) {
 Vector3D operator/(const Vector3D& a, float t) {
     return 1.0f / t * a;
 }
+
+Vector3D Vector3D::getRandomInUnitDisk(curandState* randState) {
+    while (true) {
+        Vector3D vec((curand_uniform(randState) - 0.5f) * 2, (curand_uniform(randState) - 0.5f) * 2, 0);
+        if (vec.lengthSquared() >= 1) {
+            continue;
+        }
+        return vec;
+    }
+}

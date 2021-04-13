@@ -1,17 +1,16 @@
-#include "Camera.h"
 //
 // Created by arseny on 07.02.2021.
 //
 
-#include <cmath>
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <iostream>
 #include "Quaternion.h"
 #include "Camera.h"
+#include "math_constants.h"
 
-constexpr float pi = 3.14159265;
 
-
-Camera::Camera(const Camera::CamParams& params) {
+Camera::Camera(const CamParams& params) {
     w = params.lookFrom - params.lookAt;
     w = w.normalized();
     u = Vector3D::crossProduct(params.vUp, w);
@@ -28,7 +27,7 @@ Camera::Camera(const Camera::CamParams& params) {
 }
 
 void Camera::applyFOV() {
-    float theta = mVFOV / 180.f * pi;
+    float theta = mVFOV / 180.f * (float)M_PI;
     float h = tanf(theta / 2);
     float viewportHeight = 2.0f * h;
     float viewportWidth = viewportHeight * mAspectRatio;
@@ -37,30 +36,20 @@ void Camera::applyFOV() {
     mBottomLeftCorner = mOrigin - 0.5f * mHorizontal - 0.5f * mVertical - mFocusDist * w;
 }
 
-__device__ Vector3D Camera::getRandomInUnitDisk(curandState* randState) const {
-    while (true) {
-        Vector3D vec((curand_uniform(randState) - 0.5f) * 2, (curand_uniform(randState) - 0.5f) * 2, 0);
-        if (vec.lengthSquared() >= 1) {
-            continue;
-        }
-        return vec;
-    }
-}
-
 __device__ Ray Camera::getRay(float s, float t, curandState* randState) const {
-    Vector3D rd = mLensRadius * getRandomInUnitDisk(randState);
+    Vector3D rd = mLensRadius * Vector3D::getRandomInUnitDisk(randState);
     Vector3D offset = u * rd.x() + v * rd.y();
     return Ray(mOrigin + offset, mBottomLeftCorner + s * mHorizontal + t * mVertical - mOrigin - offset);
 }
 
-// move along camera's horizontal axi
+// move along camera's horizontal axis
 void Camera::moveHorz(float dx) {
     Vector3D add(dx * u);
     mBottomLeftCorner += add;
     mOrigin += add;
 }
 
-// move along camera's vertical axi
+// move along camera's vertical axis
 void Camera::moveVert(float dy) {
     Vector3D add(dy * v);
     mBottomLeftCorner += add;
@@ -72,12 +61,12 @@ void Camera::moveDepth(float dz) {
     mBottomLeftCorner += dz * w;
 }
 
-// rotation around camera's horizontal axi
+// rotation around camera's horizontal axis
 void Camera::rotateOx(float alpha) {
     rotate(u, alpha);
 }
 
-// rotation around camera's vertical axi
+// rotation around camera's vertical axis
 void Camera::rotateOy(float alpha) {
     rotate(v, alpha);
 }
