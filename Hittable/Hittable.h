@@ -5,12 +5,14 @@
 #ifndef RAY_RACING_CLUB_HITTABLE_H
 #define RAY_RACING_CLUB_HITTABLE_H
 
-#include "../Ray.h"
-#include "../Managed.h"
+#include "../Math/Ray.h"
+
+class Material;
 
 struct HitRecord {
     Point3D intersection;
     Vector3D normal;
+    Material* material;
     float t;
     bool frontFace;
 
@@ -23,6 +25,8 @@ struct HitRecord {
 class Hittable {
 public:
     __host__ __device__ virtual bool hit(const Ray& ray, float tMin, float tMax, HitRecord& record) const = 0;
+
+    __host__ __device__ virtual ~Hittable() {}
 };
 
 #endif //RAY_RACING_CLUB_HITTABLE_H

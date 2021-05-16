@@ -2,15 +2,15 @@
 // Created by awesyr on 26.02.2021.
 //
 
-#include "Managed.h"
-#include "Common/ErrorHandling.h"
+#include "Unified.h"
+#include "../ErrorProcessing/ErrorHandling.h"
 
-void* Managed::operator new(size_t len) {
+void* Unified::operator new(size_t len) {
     void* ptr;
     catchError(cudaMallocManaged(&ptr, len));
     return ptr;
 }
 
-void Managed::operator delete(void* ptr) {
+void Unified::operator delete(void* ptr) {
     catchError(cudaFree(ptr));
 }

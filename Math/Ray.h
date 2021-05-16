@@ -5,8 +5,8 @@
 #ifndef RAY_RACING_CLUB_RAY_H
 #define RAY_RACING_CLUB_RAY_H
 
-#include "Common/Math.h"
-#include "Common/Vector3D.h"
+#include "Math.h"
+#include "Vector3D.h"
 
 class Ray {
 public:

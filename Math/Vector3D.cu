@@ -2,9 +2,9 @@
 // Created by awesyr on 20.02.2021.
 //
 
-#include <cmath>
-
 #include "Vector3D.h"
+#include "Math.h"
+#include "Rand.h"
 
 Vector3D::Vector3D() {
     mCoords[0] = 0.0f;
@@ -41,6 +41,13 @@ Vector3D& Vector3D::operator+=(const Vector3D& other) {
     return *this;
 }
 
+Vector3D& Vector3D::operator*=(const Vector3D& other) {
+    mCoords[0] *= other.mCoords[0];
+    mCoords[1] *= other.mCoords[1];
+    mCoords[2] *= other.mCoords[2];
+    return *this;
+}
+
 Vector3D& Vector3D::operator*=(float value) {
     mCoords[0] *= value;
     mCoords[1] *= value;
@@ -74,6 +81,12 @@ Vector3D Vector3D::normalized() const {
     return *this / length();
 }
 
+bool Vector3D::fuzzyIsNull() const {
+    return fabs(mCoords[0]) < GlobalConstants::epsilon &&
+           fabs(mCoords[1]) < GlobalConstants::epsilon &&
+           fabs(mCoords[2]) < GlobalConstants::epsilon;
+}
+
 float Vector3D::dotProduct(const Vector3D& a, const Vector3D& b) {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
@@ -90,12 +103,45 @@ __device__ void Vector3D::atomicAddVec(const Vector3D& other) {
     atomicAdd(mCoords + 2, other[2]);
 }
 
+__device__ Vector3D Vector3D::random(float min, float max, curandState* randState)  {
+    return Vector3D(randomFloat(min, max, randState),
+                    randomFloat(min, max, randState),
+                    randomFloat(min, max, randState));
+}
+
+__device__ Vector3D Vector3D::randomInUnitSphere(curandState* randState)  {
+    while (true) {
+        Vector3D p = random(-1.0f, 1.0f, randState);
+        if (p.lengthSquared() >= 1.0f) continue;
+        return p;
+    }
+}
+
+__device__ Vector3D Vector3D::randomUnit(curandState* randState)  {
+    return randomInUnitSphere(randState).normalized();
+}
+
+Vector3D Vector3D::reflect(const Vector3D& v, const Vector3D& n) {
+    return v - 2 * dotProduct(v, n) * n;
+}
+
+Vector3D Vector3D::refract(const Vector3D& uv, const Vector3D& n, float etaiOverEtat) {
+    float cosTheta = fmin(Vector3D::dotProduct(-uv, n), 1.0f);
+    Vector3D rOutPerp = etaiOverEtat * (uv + cosTheta * n);
+    Vector3D rOutParallel = -sqrt(fabs(1.0f - rOutPerp.lengthSquared())) * n;
+    return rOutPerp + rOutParallel;
+}
+
 Vector3D operator+(const Vector3D& a, const Vector3D& b) {
     return Vector3D(a[0] + b[0], a[1] + b[1], a[2] + b[2]);
 }
 
 Vector3D operator-(const Vector3D& a, const Vector3D& b) {
     return Vector3D(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+}
+
+Vector3D operator*(const Vector3D& a, const Vector3D& b) {
+    return Vector3D(a[0] * b[0], a[1] * b[1], a[2] * b[2]);
 }
 
 Vector3D operator*(const Vector3D& a, float t) {

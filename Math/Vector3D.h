@@ -20,6 +20,7 @@ public:
     __host__ __device__ Vector3D operator-() const;
 
     __host__ __device__ Vector3D& operator+=(const Vector3D& other);
+    __host__ __device__ Vector3D& operator*=(const Vector3D& other);
     __host__ __device__ Vector3D& operator*=(float value);
     __host__ __device__ Vector3D& operator/=(float value);
 
@@ -36,7 +37,16 @@ public:
 
     __device__ static Vector3D getRandomInUnitDisk(curandState* randState);
 
+    __host__ __device__ bool fuzzyIsNull() const;
+
     __device__ void atomicAddVec(const Vector3D& other);
+
+    __device__ static Vector3D random(float min, float max, curandState* randState);
+    __device__ static Vector3D randomInUnitSphere(curandState* randState);
+    __device__ static Vector3D randomUnit(curandState* randState);
+
+    __host__ __device__ static Vector3D reflect(const Vector3D& v, const Vector3D& n);
+    __host__ __device__ static Vector3D refract(const Vector3D& uv, const Vector3D& n, float etaiOverEtat);
 
 private:
     float mCoords[3];
@@ -47,6 +57,7 @@ using Color = Vector3D;
 
 __host__ __device__ Vector3D operator+(const Vector3D& a, const Vector3D& b);
 __host__ __device__ Vector3D operator-(const Vector3D& a, const Vector3D& b);
+__host__ __device__ Vector3D operator*(const Vector3D& a, const Vector3D& b);
 
 __host__ __device__ Vector3D operator*(const Vector3D& a, float t);
 __host__ __device__ Vector3D operator*(float t, const Vector3D& a);

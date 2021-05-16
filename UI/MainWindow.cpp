@@ -12,11 +12,12 @@
 #include <QMouseEvent>
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
-#include "Camera.h"
+#include "../Render/Camera.h"
 
-constexpr int imgWidth = 1280;
-constexpr int imgHeight = 720;
+constexpr int imgWidth = 700;
+constexpr int imgHeight = 450;
 constexpr int samplesPerPixel = 10;
+constexpr int maxDepth = 50;
 
 constexpr float moveStep = 0.1f;
 constexpr float rotStep = 0.05f;
@@ -32,6 +33,7 @@ MainWindow::MainWindow(QWidget* parent) :
     renderInfo.imgWidth = imgWidth;
     renderInfo.imgHeight = imgHeight;
     renderInfo.samplesPerPixel = samplesPerPixel;
+    renderInfo.maxDepth = maxDepth;
     
     mRenderer = new Renderer(renderInfo);
     

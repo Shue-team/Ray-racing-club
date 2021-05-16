@@ -6,7 +6,7 @@
 #define RAY_RACING_CLUB_MAINWINDOW_H
 
 #include <QWidget>
-#include "Renderer.h"
+#include "../Render/Renderer.h"
 #include "Controller.h"
 
 QT_BEGIN_NAMESPACE

@@ -4,7 +4,7 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QEnterEvent>
-#include "Camera.h"
+#include "../Render/Camera.h"
 
 
 /*

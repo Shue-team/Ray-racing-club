@@ -5,9 +5,9 @@
 #ifndef RAY_RACING_CLUB_CAMERA_H
 #define RAY_RACING_CLUB_CAMERA_H
 
-#include "Ray.h"
-#include "Managed.h"
 #include <curand_kernel.h>
+#include "../Math/Ray.h"
+#include "../Memory/Unified.h"
 
 struct CamParams {
     Point3D lookFrom;
@@ -19,7 +19,7 @@ struct CamParams {
     float focusDist;
 };
 
-class Camera : public Managed {
+class Camera : public Unified {
 public:
 
     __host__ __device__ Camera(const CamParams& params);

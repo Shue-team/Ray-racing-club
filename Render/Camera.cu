@@ -5,7 +5,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <iostream>
-#include "Quaternion.h"
+#include "../Math/Quaternion.h"
 #include "Camera.h"
 #include "math_constants.h"
 
