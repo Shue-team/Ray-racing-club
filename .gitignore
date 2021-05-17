@@ -41,3 +41,11 @@
 /out/build/x64-Debug
 
 /out/build/x64-Debug (по умолчанию)
+/.idea/.gitignore
+/.idea/.name
+/cmake-build-debug/
+/.idea/vcs.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/qt5.natvis
+/.idea/RTProj.iml
