@@ -16,7 +16,7 @@ struct HitRecord {
     float t;
     bool frontFace;
 
-    __host__ __device__ inline void setFaceNormal(const Ray& ray, const Vector3D& outwardNormal) {
+    __host__ __device__ inline void setFaceNormal(const Ray &ray, const Vector3D &outwardNormal) {
         frontFace = Vector3D::dotProduct(outwardNormal, ray.direction()) < 0;
         normal = frontFace ? outwardNormal : -outwardNormal;
     }

@@ -11,6 +11,10 @@
 #include "../ErrorProcessing/ErrorHandling.h"
 
 #include <curand_kernel.h>
+#include "../Material/MaterialDef.h"
+#include "../Hittable/HittableDef.h"
+
+using std::vector;
 
 class QImage;
 
@@ -28,12 +32,13 @@ class Renderer : public Invalidatable {
 public:
     explicit Renderer(const RenderInfo& renderInfo);
 
-    QImage render(const Camera* camera);
+    uchar8* render(const Camera* camera);
+
+    void setWorld(Hittable** world);
 
     ~Renderer();
 
 private:
-    uchar8* renderRaw(const Camera* camera);
 
     RenderInfo mRi;
     dim3 mGridDim;
@@ -45,7 +50,7 @@ private:
 
     curandState* mRandStateArr;
 
-    Hittable** mWorld_d;
+    Hittable** mWorld_d = nullptr;
 };
 
 #endif //RAY_RACING_CLUB_RENDERER_H

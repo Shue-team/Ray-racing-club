@@ -7,10 +7,20 @@
 
 #include "Material.h"
 
+struct DielectricDef : MaterialDef {
+    DielectricDef(float refractIdx) : refractIdx(refractIdx) {}
+
+    __host__ __device__ MaterialType type() const override {
+        return MaterialType::Dielectric;
+    }
+
+    float refractIdx;
+};
+
 class Dielectric : public Material {
 public:
-    __host__ __device__ Dielectric(float refractIdx)
-        : mRefractIdx(refractIdx) {}
+    __host__ __device__ Dielectric(const DielectricDef* def)
+        : mRefractIdx(def->refractIdx) {}
 
     __device__ bool scatter(const Ray& rIn, const HitRecord& rec,
                             Color& attenuation, Ray& scattered,

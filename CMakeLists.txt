@@ -1,52 +1,47 @@
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
-project(Ray-racing-club LANGUAGES CXX CUDA)
+project(Ray-racing-club LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(CUDA REQUIRED)
 set(CUDA_SEPARABLE_COMPILATION ON)
 
-set(CMAKE_PREFIX_PATH "D:\\Qt\\5.15.2\\msvc2019_64\\lib\\cmake") #personal
-find_package(Qt5Widgets REQUIRED)
+cuda_add_executable(Ray-racing-club Main.cpp
+    Hittable/Scene.h
+    Hittable/Scene.cu
+    Math/Math.h
+    Hittable/Hittable.h
+    Math/Ray.h
+    Material/MaterialDef.h
+    Hittable/HittableDef.h
+    Hittable/HittableDef.cu
+    Hittable/Sphere.cu
+    Hittable/Sphere.h
+    Hittable/HittableList.h
+    Hittable/HittableList.cu
+    Math/Vector3D.cu
+    Math/Vector3D.h
+    Memory/Unified.cu
+    Memory/Unified.h
+    Math/Ray.cu
+    ErrorProcessing/Invalidatable.h
+    ErrorProcessing/Invalidatable.cpp
+    ErrorProcessing/ErrorHandling.h
+    ErrorProcessing/ErrorHandling.cpp
+    Material/Lambertian.cu
+    Material/Lambertian.h
+    Math/Rand.h
+    Material/Material.h
+    Material/MaterialDef.cu
+    Material/Metal.h
+    Material/Metal.cu
+    Material/Dielectric.cu
+    Material/Dielectric.h
+    Render/Renderer.cu
+    Render/Renderer.h
+    Render/Camera.cu
+    Render/Camera.h)
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
+add_subdirectory(UI)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-cuda_add_executable(Ray-racing-club
-        Main.cpp
-        UI/MainWindow.cpp
-        UI/MainWindow.h
-        UI/MainWindow.ui
-        Math/Math.h
-        Hittable/Hittable.h
-        Math/Ray.h
-        Render/Renderer.cu
-        Render/Renderer.h
-        Hittable/Sphere.cu
-        Hittable/Sphere.h
-        Hittable/HittableList.h
-        Hittable/HittableList.cu
-        Render/Camera.cu
-        Render/Camera.h
-        Math/Vector3D.cu
-        Math/Vector3D.h
-        Memory/Unified.cu
-        Memory/Unified.h
-        Render/Renderer.cpp
-        Math/Ray.cu
-        ErrorProcessing/Invalidatable.h
-        ErrorProcessing/Invalidatable.cpp
-        ErrorProcessing/ErrorHandling.h
-        ErrorProcessing/ErrorHandling.cpp
-        Material/Lambertian.cu
-        Material/Lambertian.h
-        Math/Rand.h
-        Material/Metal.h
-        Material/Metal.cu
-        Material/Dielectric.cu
-        Material/Dielectric.h)
-
-target_link_libraries(Ray-racing-club Qt5::Widgets)
+target_link_libraries(Ray-racing-club UI_lib)

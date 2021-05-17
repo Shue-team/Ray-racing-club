@@ -92,24 +92,10 @@ __global__ void initRandomState(int imgWidth, int imgHeight, uint32 firstSeed,
     curand_init(firstSeed + pixelIdx, 0, 0, &randStateArr[pixelIdx]);
 }
 
-__global__ void createWorld(Hittable** world) {
-    Hittable** list = new Hittable*[4];
-
-    auto* center = new Lambertian(Color(0.7f, 0.3f, 0.3f));
-    auto* left = new Metal(Color(0.8f, 0.8f, 0.8f), 0.3f);
-    auto* right = new Dielectric(1.5f);
-    auto* ground = new Lambertian(Color(0.8f, 0.8f, 0.0f));
-
-    list[0] = new Sphere(Point3D(0.0f, 0.0f, -1.0f), 0.5f, center);
-    list[1] = new Sphere(Point3D(-1.0f, 0.0f, -1.0f), 0.5f, left);
-    list[2] = new Sphere(Point3D(0.0f, -100.5f, -1.0f), 100.0f, ground);
-    list[3] = new Sphere(Point3D(1.0f, 0.0f, -1.0f), 0.5f, right);
-
-    *world = new HittableList(list, 4);
-}
-
 __global__ void destroyWorld(Hittable** world) {
-    delete *world;
+    if (world != nullptr) {
+        delete *world;
+    }
 }
 
 Renderer::Renderer(const RenderInfo& renderInfo) : mRi(renderInfo) {
@@ -118,10 +104,6 @@ Renderer::Renderer(const RenderInfo& renderInfo) : mRi(renderInfo) {
     mColorDataSize = 3 * imgSquare;
     catchErrorInClass(cudaMalloc(&mColorData_d, mColorDataSize * sizeof(uchar8)));
     mColorData_h = new uchar8[mColorDataSize];
-
-    catchErrorInClass(cudaMalloc(&mWorld_d, sizeof(Hittable*)));
-    createWorld<<<1, 1>>>(mWorld_d);
-    checkErrorInClass("createWorld");
 
     catchErrorInClass(cudaMalloc(&mRandStateArr, imgSquare * sizeof(curandState)));
 
@@ -137,7 +119,7 @@ Renderer::Renderer(const RenderInfo& renderInfo) : mRi(renderInfo) {
     checkErrorInClass("initRandomState");
 }
 
-uchar8* Renderer::renderRaw(const Camera* camera) {
+uchar8* Renderer::render(const Camera* camera) {
     clock_t start, stop;
     start = clock();
 
@@ -145,13 +127,18 @@ uchar8* Renderer::renderRaw(const Camera* camera) {
     checkError("pixelRender");
 
     catchError(cudaMemcpy(mColorData_h, mColorData_d,
-                                 mColorDataSize * sizeof(uchar8), cudaMemcpyDeviceToHost));
+               mColorDataSize * sizeof(uchar8), cudaMemcpyDeviceToHost));
 
     stop = clock();
     double timerSeconds = ((double)(stop - start)) / CLOCKS_PER_SEC;
     std::cout << "took " << timerSeconds << " seconds.\n";
 
     return mColorData_h;
+}
+
+void Renderer::setWorld(Hittable** world) {
+    destroyWorld<<<1, 1>>>(mWorld_d);
+    mWorld_d = world;
 }
 
 Renderer::~Renderer() {

@@ -6,7 +6,10 @@
 #define RAY_RACING_CLUB_MATERIAL_H
 
 #include <curand_kernel.h>
+#include "../Math/Ray.h"
 #include "../Hittable/Hittable.h"
+
+#include "MaterialDef.h"
 
 class Material {
 public:

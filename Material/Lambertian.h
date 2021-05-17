@@ -7,9 +7,20 @@
 
 #include "Material.h"
 
+struct LambertianDef : MaterialDef {
+    LambertianDef(const Color& albedo) : albedo(albedo) {}
+
+    __host__ __device__ MaterialType type() const override {
+        return MaterialType::Lambertian;
+    }
+
+    Color albedo;
+};
+
 class Lambertian : public Material {
 public:
-    __host__ __device__ Lambertian(const Color& albedo) : mAlbedo(albedo) {}
+    __host__ __device__ Lambertian(const LambertianDef* def)
+        : mAlbedo(def->albedo) {}
 
     __device__ bool scatter(const Ray& rIn, const HitRecord& rec,
                             Color& attenuation, Ray& scattered,

@@ -2,6 +2,8 @@
 #define RAY_RACING_CLUB_HITTABLELIST_H
 
 #include "Hittable.h"
+#include "HittableDef.h"
+#include "../Material/MaterialDef.h"
 
 class HittableList : public Hittable {
 public:
@@ -16,5 +18,7 @@ private:
     Hittable** mList;
     int mSize;
 };
+
+
 
 #endif //RAY_RACING_CLUB_HITTABLELIST_H

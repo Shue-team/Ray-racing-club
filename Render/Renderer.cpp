@@ -6,8 +6,3 @@
 
 #include "Renderer.h"
 
-QImage Renderer::render(const Camera* camera) {
-    uchar8* data = renderRaw(camera);
-    int bytesPerLine = 3 * mRi.imgWidth;
-    return QImage(data, mRi.imgWidth, mRi.imgHeight, bytesPerLine, QImage::Format_RGB888);
-}

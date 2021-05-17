@@ -4,6 +4,12 @@
 
 #include <cmath>
 #include "Sphere.h"
+#include "../Material/Material.h"
+
+Sphere::Sphere(const SphereDef* def, Material *material)
+    : mCenter(def->center),
+      mRadius(def->radius),
+      mMaterial(material) {}
 
 bool Sphere::hit(const Ray& ray, float tMin, float tMax, HitRecord& record) const {
     Point3D oc = ray.origin() - mCenter;
@@ -32,4 +38,8 @@ bool Sphere::hit(const Ray& ray, float tMin, float tMax, HitRecord& record) cons
     record.setFaceNormal(ray, outwardNormal);
 
     return true;
+}
+
+HittableType SphereDef::type() const {
+    return HittableType::Sphere;
 }

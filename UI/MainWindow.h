@@ -6,7 +6,10 @@
 #define RAY_RACING_CLUB_MAINWINDOW_H
 
 #include <QWidget>
-#include "Render/Renderer.h"
+#include <QGraphicsScene>
+
+#include "../Render/Renderer.h"
+#include "WorldEdit.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,10 +24,14 @@ public:
     ~MainWindow() override;
 
 private:
+    void initWorldEdit();
+
     Ui::MainWindow* mUi;
     Renderer* mRenderer;
+    WorldEdit* mWorldEdit;
 
 private slots:
+    void onWorldEditButton();
     void onRenderAction() const;
 };
 

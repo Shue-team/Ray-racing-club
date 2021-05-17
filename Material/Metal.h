@@ -1,16 +1,25 @@
-//
-// Created by awesyr on 24.03.2021.
-//
-
 #ifndef RAY_RACING_CLUB_METAL_H
 #define RAY_RACING_CLUB_METAL_H
 
 #include "Material.h"
 
+struct MetalDef : MaterialDef {
+    MetalDef(const Color& albedo, float fuzz)
+        : albedo(albedo), fuzz(fuzz) {}
+
+    __host__ __device__ MaterialType type() const override {
+        return MaterialType::Metal;
+    }
+
+    Color albedo;
+    float fuzz;
+};
+
 class Metal : public Material {
 public:
-    __host__ __device__ Metal(const Color& albedo, float fuzz)
-        : mAlbedo(albedo), mFuzz(fuzz < 1.0f ? fuzz : 1.0f) {}
+    __host__ __device__ Metal(const MetalDef* def)
+        : mAlbedo(def->albedo),
+          mFuzz(def->fuzz < 1.0f ? def->fuzz : 1.0f) {}
 
     __device__ bool scatter(const Ray& rIn, const HitRecord& rec,
                             Color& attenuation, Ray& scattered,
