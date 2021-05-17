@@ -14,18 +14,20 @@ enum class MaterialType {
 };
 
 struct MaterialDef {
-    virtual ~MaterialDef() = default;
+    MaterialDef(MaterialType type) : mType(type) {}
 
-    __host__ __device__ virtual MaterialType type() const = 0;
-
+    __host__ __device__ MaterialType type() const { return mType; }
     template<typename T>
     static inline MaterialDef* transferToGPU(const T* ptr) {
-        static_assert(std::is_base_of<MaterialDef, T>::value);
+        static_assert(std::is_base_of<MaterialDef, T>::value, "T must inherits MaterialDef");
         T* gpuPtr;
         catchError(cudaMalloc(&gpuPtr, sizeof(T)));
         catchError(cudaMemcpy(gpuPtr, ptr, sizeof(T), cudaMemcpyHostToDevice));
         return gpuPtr;
     }
+
+private:
+    MaterialType mType;
 };
 
 __host__ __device__ Material* createMaterial(const MaterialDef* def);

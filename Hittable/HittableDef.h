@@ -10,18 +10,21 @@ enum class HittableType {
 };
 
 struct HittableDef {
-    virtual ~HittableDef() = default;
+    HittableDef(HittableType type) : mType(type) {}
 
-    __host__ __device__ virtual HittableType type() const = 0;
+    __host__ __device__ HittableType type() const { return mType; }
 
     template<typename T>
     static inline HittableDef* transferToGPU(const T* ptr) {
-        static_assert(std::is_base_of<HittableDef, T>::value);
+        static_assert(std::is_base_of<HittableDef, T>::value, "T must inherits HittableDef");
         T* gpuPtr;
         catchError(cudaMalloc(&gpuPtr, sizeof(T)));
         catchError(cudaMemcpy(gpuPtr, ptr, sizeof(T), cudaMemcpyHostToDevice));
         return gpuPtr;
     }
+
+private:
+    HittableType mType;
 };
 
 __host__ __device__ Hittable* createHittable(const HittableDef* def, Material* material);

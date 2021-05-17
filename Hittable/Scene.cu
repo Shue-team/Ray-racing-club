@@ -22,5 +22,6 @@ Hittable** Scene::create(HittableDef** hitDefs,
     Hittable** scene;
     catchError(cudaMalloc(&scene, sizeof(Hittable*)));
     createOnGPU<<<1, 1>>>(scene, hitDefs, matDefs, size);
+    checkError("createOnGPU");
     return scene;
 }

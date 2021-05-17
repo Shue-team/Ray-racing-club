@@ -10,9 +10,8 @@
 
 struct SphereDef : HittableDef {
     SphereDef(const Point3D& center, float radius)
-        : center(center), radius(radius) {}
-
-    __host__ __device__ HittableType type() const override;
+        : HittableDef(HittableType::Sphere),
+        center(center), radius(radius) {}
 
     Point3D center;
     float radius;

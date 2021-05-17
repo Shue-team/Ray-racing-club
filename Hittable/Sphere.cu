@@ -39,7 +39,3 @@ bool Sphere::hit(const Ray& ray, float tMin, float tMax, HitRecord& record) cons
 
     return true;
 }
-
-HittableType SphereDef::type() const {
-    return HittableType::Sphere;
-}

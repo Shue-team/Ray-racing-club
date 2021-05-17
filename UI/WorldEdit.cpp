@@ -67,14 +67,16 @@ Hittable** WorldEdit::createWorld() const {
     HittableDef** hittableDefs;
     catchError(cudaMalloc(&hittableDefs, n * sizeof(HittableDef*)));
     catchError(cudaMemcpy(hittableDefs, mHittableDefs.data(),
-                          n, cudaMemcpyHostToDevice));
+                          n * sizeof(HittableDef*), cudaMemcpyHostToDevice));
 
     MaterialDef** materialDefs;
     catchError(cudaMalloc(&materialDefs, n * sizeof(MaterialDef*)));
     catchError(cudaMemcpy(materialDefs, mMaterialDefs.data(),
-                          n, cudaMemcpyHostToDevice));
+                          n * sizeof(MaterialDef*), cudaMemcpyHostToDevice));
 
-    return Scene::create(hittableDefs, materialDefs, n);
+    auto* scene = Scene::create(hittableDefs, materialDefs, n);
+    checkError("Scene::create");
+    return scene;
 }
 
 void WorldEdit::onHittableChanged(const QString& name)

@@ -5,11 +5,8 @@
 
 struct MetalDef : MaterialDef {
     MetalDef(const Color& albedo, float fuzz)
-        : albedo(albedo), fuzz(fuzz) {}
-
-    __host__ __device__ MaterialType type() const override {
-        return MaterialType::Metal;
-    }
+        : MaterialDef(MaterialType::Metal),
+        albedo(albedo), fuzz(fuzz) {}
 
     Color albedo;
     float fuzz;

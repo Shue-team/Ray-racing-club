@@ -8,11 +8,10 @@
 #include "Material.h"
 
 struct DielectricDef : MaterialDef {
-    DielectricDef(float refractIdx) : refractIdx(refractIdx) {}
+    DielectricDef(float refractIdx)
+    : MaterialDef(MaterialType::Dielectric),
+    refractIdx(refractIdx) {}
 
-    __host__ __device__ MaterialType type() const override {
-        return MaterialType::Dielectric;
-    }
 
     float refractIdx;
 };

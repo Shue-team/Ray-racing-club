@@ -8,11 +8,9 @@
 #include "Material.h"
 
 struct LambertianDef : MaterialDef {
-    LambertianDef(const Color& albedo) : albedo(albedo) {}
-
-    __host__ __device__ MaterialType type() const override {
-        return MaterialType::Lambertian;
-    }
+    LambertianDef(const Color& albedo)
+        : MaterialDef(MaterialType::Lambertian),
+        albedo(albedo) {}
 
     Color albedo;
 };

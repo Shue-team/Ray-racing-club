@@ -1,6 +1,6 @@
 project(UI)
 
-set(CMAKE_PREFIX_PATH "/home/arseny/Qt/5.15.2/gcc_64/lib/cmake")
+set(CMAKE_PREFIX_PATH "D:\\Qt\\5.15.2\\msvc2019_64\\lib\\cmake")
 
 find_package(Qt5Widgets REQUIRED)
 
